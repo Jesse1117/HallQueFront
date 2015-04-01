@@ -305,6 +305,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\InputNumberDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\JttsAPI.cpp"
 				>
 			</File>
@@ -724,6 +728,10 @@
 			</File>
 			<File
 				RelativePath=".\InlineQueData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InputNumberDlg.h"
 				>
 			</File>
 			<File
