@@ -9,6 +9,7 @@
 #include "ChangePassWordDlg.h"
 #include "resource.h"
 #include "CommonConvert.h"
+#include "VirtualCallerDlg.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -249,5 +250,23 @@ void CQueueCallerDlg::OnBnClickedButtonLogin()
 		AfxMessageBox(_T("请输入用户名"));
 		return;
 	}
-	
+	for (int i=0;i<m_UserInfoMap.GetCount();i++)
+	{
+		CUserInfo info;
+		m_UserInfoMap.Lookup(i,info);
+		if (m_strUserName==info.GetUserName())
+		{
+			if (m_strPassWord==info.GetPassWord())
+			{
+				CVirtualCallerDlg VirtualDlg(NULL);
+				VirtualDlg.DoModal();
+				/*this->DestroyWindow();*/
+			}
+			else
+			{
+				AfxMessageBox(_T("密码错误"));
+				return;
+			}
+		}
+	}
 }

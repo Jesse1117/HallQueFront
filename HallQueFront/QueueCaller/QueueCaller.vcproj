@@ -233,6 +233,10 @@
 				RelativePath=".\UserInfo.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\VirtualCallerDlg.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -281,6 +285,10 @@
 			</File>
 			<File
 				RelativePath=".\UserInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VirtualCallerDlg.h"
 				>
 			</File>
 		</Filter>

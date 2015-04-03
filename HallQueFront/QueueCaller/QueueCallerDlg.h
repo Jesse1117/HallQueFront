@@ -44,7 +44,9 @@ private:
 	CString m_strUserName;
 	CString m_strUserInfoFilePath;
 	CComboBox m_cs_ComUserInfo;
+
 	CMap<int,int,CUserInfo,CUserInfo> m_UserInfoMap;
 public:
 	afx_msg void OnCbnEditchangeComboUsername();
+	afx_msg void OnBnClickedButtonLogin();
 };

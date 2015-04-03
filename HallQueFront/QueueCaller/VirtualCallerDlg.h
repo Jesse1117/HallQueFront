@@ -1,15 +1,15 @@
 #pragma once
 
 
-// CVirtualCaller 对话框
+// CVirtualCallerDlg 对话框
 
-class CVirtualCaller : public CDialog
+class CVirtualCallerDlg : public CDialog
 {
-	DECLARE_DYNAMIC(CVirtualCaller)
+	DECLARE_DYNAMIC(CVirtualCallerDlg)
 
 public:
-	CVirtualCaller(CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CVirtualCaller();
+	CVirtualCallerDlg(CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CVirtualCallerDlg();
 
 // 对话框数据
 	enum { IDD = IDD_DIALOG_CALLER };
