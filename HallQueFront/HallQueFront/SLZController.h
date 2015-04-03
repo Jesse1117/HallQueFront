@@ -25,7 +25,6 @@
 #include "SocketBufDef.h"
 #define WM_SHOWMSG WM_USER+3096
 #define WM_SHOWPAGE WM_USER+3097
-#define WM_SHOWFIRSTPAGE WM_USER+3098
 using namespace std;
 
 class SLZController//处理整个数组逻辑类           

@@ -78,6 +78,7 @@ BEGIN_MESSAGE_MAP(CQueueCallerDlg, CDialog)
 	ON_BN_CLICKED(IDC_CHECK_AUTOLOGIN, &CQueueCallerDlg::OnBnClickedCheckAutologin)
 	ON_CBN_SELCHANGE(IDC_COMBO_USERNAME, &CQueueCallerDlg::OnCbnSelchangeComboUsername)
 	ON_CBN_EDITCHANGE(IDC_COMBO_USERNAME, &CQueueCallerDlg::OnCbnEditchangeComboUsername)
+	ON_BN_CLICKED(ID_BUTTON_LOGIN, &CQueueCallerDlg::OnBnClickedButtonLogin)
 END_MESSAGE_MAP()
 
 
@@ -205,7 +206,8 @@ BOOL CQueueCallerDlg::ReadUserFileFromFiles()
 void CQueueCallerDlg::OnBnClickedButtonFindpassword()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CChangePassWordDlg ChangePassWordDlg(this);
+	UpdateData();
+	CChangePassWordDlg ChangePassWordDlg(this,m_strUserName);
 	ChangePassWordDlg.DoModal();
 }
 
@@ -222,15 +224,30 @@ void CQueueCallerDlg::OnBnClickedCheckAutologin()
 void CQueueCallerDlg::OnCbnSelchangeComboUsername()
 {
 	// TODO: 在此添加控件通知处理程序代码
-
-	if (!m_strUserName.IsEmpty())
-	{
 		CButton* button = (CButton*)GetDlgItem(IDC_BUTTON_CHANGEPASSWORD);
-		button->EnableWindow(FALSE);
-	}	
+		button->EnableWindow();
+
 }
 
 void CQueueCallerDlg::OnCbnEditchangeComboUsername()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	UpdateData();
+	if (!m_strUserName.IsEmpty())
+	{
+		CButton* button = (CButton*)GetDlgItem(IDC_BUTTON_CHANGEPASSWORD);
+		button->EnableWindow();
+	}	
+}
+
+void CQueueCallerDlg::OnBnClickedButtonLogin()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	UpdateData();
+	if (m_strUserName.IsEmpty())
+	{
+		AfxMessageBox(_T("请输入用户名"));
+		return;
+	}
+	
 }

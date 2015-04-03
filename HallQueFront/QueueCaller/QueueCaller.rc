@@ -135,6 +135,15 @@ BEGIN
     LTEXT           "确认新密码",IDC_STATIC,27,92,41,8
 END
 
+IDD_DIALOG_CALLER DIALOGEX 0, 0, 210, 324
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "呼叫终端"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,48,258,50,14
+    PUSHBUTTON      "取消",IDCANCEL,125,259,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -214,6 +223,14 @@ BEGIN
         RIGHTMARGIN, 257
         TOPMARGIN, 7
         BOTTOMMARGIN, 139
+    END
+
+    IDD_DIALOG_CALLER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 203
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 317
     END
 END
 #endif    // APSTUDIO_INVOKED
