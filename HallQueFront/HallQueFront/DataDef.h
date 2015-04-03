@@ -82,6 +82,7 @@ public:
 	CString strCustName;//用户姓名，用于刷身份证
 	CString strAttchQueID;//属于那个队列的队列ID
 	int nAttchPageID;//链接哪个界面
+	CString strPhoneNum; //电话号码
 }CARDINFO,*PCARDINFO;
 
 typedef struct _tagLogicVariables//系统综合逻辑变量

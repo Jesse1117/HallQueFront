@@ -48,7 +48,7 @@ BOOL CInputNumberDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	m_ed_strPhoneNum.SetFocus();
-	m_editfont.CreatePointFont(220,_T("ΊΪΜε"));
+	m_editfont.CreatePointFont(300,_T("ΊΪΜε"));
 	m_ed_strPhoneNum.SetFont(&m_editfont);
 	return TRUE;
 }
