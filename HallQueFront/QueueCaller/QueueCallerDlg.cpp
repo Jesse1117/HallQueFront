@@ -66,6 +66,8 @@ void CQueueCallerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX,IDC_COMBO_USERNAME,m_strUserName);
 	DDX_Text(pDX,IDC_EDIT_PASSWORD,m_strPassWord);
 	DDX_Control(pDX,IDC_COMBO_USERNAME,m_cs_ComUserInfo);
+	DDX_Control(pDX,IDC_CHECK_AUTOLOGIN,m_cs_AutoLogin);
+	DDX_Control(pDX,IDC_CHECK_REMEMBER,m_cs_Remember);
 }
 
 BEGIN_MESSAGE_MAP(CQueueCallerDlg, CDialog)
@@ -113,6 +115,8 @@ BOOL CQueueCallerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	
+
 	ReadUserFileFromFiles();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -258,9 +262,17 @@ void CQueueCallerDlg::OnBnClickedButtonLogin()
 		{
 			if (m_strPassWord==info.GetPassWord())
 			{
-				CVirtualCallerDlg VirtualDlg(NULL);
-				VirtualDlg.DoModal();
-				/*this->DestroyWindow();*/
+				if (m_cs_AutoLogin.GetCheck()==BST_CHECKED)
+					info.SetLogin(TRUE);
+				if (m_cs_Remember.GetCheck()==BST_CHECKED)
+					info.SetRemember(TRUE);
+				m_UserInfoMap.SetAt(i,info);
+
+				CVirtualCallerDlg* VirtualDlg = new CVirtualCallerDlg();
+				VirtualDlg->Create(IDD_DIALOG_CALLER);
+				VirtualDlg->ShowWindow(SW_SHOWNORMAL);
+
+				this->ShowWindow(SW_HIDE);
 			}
 			else
 			{
