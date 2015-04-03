@@ -64,6 +64,7 @@ void CQueueCallerDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	DDX_Text(pDX,IDC_COMBO_USERNAME,m_strUserName);
 	DDX_Text(pDX,IDC_EDIT_PASSWORD,m_strPassWord);
+	DDX_Control(pDX,IDC_COMBO_USERNAME,m_cs_ComUserInfo);
 }
 
 BEGIN_MESSAGE_MAP(CQueueCallerDlg, CDialog)
@@ -76,6 +77,7 @@ BEGIN_MESSAGE_MAP(CQueueCallerDlg, CDialog)
 	ON_BN_CLICKED(IDC_CHECK_REMEMBER, &CQueueCallerDlg::OnBnClickedCheckRemember)
 	ON_BN_CLICKED(IDC_CHECK_AUTOLOGIN, &CQueueCallerDlg::OnBnClickedCheckAutologin)
 	ON_CBN_SELCHANGE(IDC_COMBO_USERNAME, &CQueueCallerDlg::OnCbnSelchangeComboUsername)
+	ON_CBN_EDITCHANGE(IDC_COMBO_USERNAME, &CQueueCallerDlg::OnCbnEditchangeComboUsername)
 END_MESSAGE_MAP()
 
 
@@ -109,7 +111,7 @@ BOOL CQueueCallerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-
+	ReadUserFileFromFiles();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -167,7 +169,10 @@ void CQueueCallerDlg::OnBnClickedButtonRegister()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CRegisterDlg RegisterDlg(this);
-	RegisterDlg.DoModal();
+	if (RegisterDlg.DoModal()==IDOK)
+	{
+		ReadUserFileFromFiles();
+	}	
 }
 
 BOOL CQueueCallerDlg::ReadUserFileFromFiles()
@@ -176,18 +181,18 @@ BOOL CQueueCallerDlg::ReadUserFileFromFiles()
 	CFileException e;
 	if (file.Open(m_strUserInfoFilePath,CFile::modeRead,&e))
 	{
-		UserInfo userinfo;
+		CUserInfo* userinfo;
 		CArchive ar(&file,CArchive::load);
 		if (file.GetLength()) 
 			do
 			{
 				ar>>userinfo;
-				if (!userinfo.UserName.IsEmpty())
+				if (userinfo)
 				{
-					m_UserInfoMap[m_cs_ComUserInfo.AddString(userinfo.UserName)-1]
-					= userinfo;
-					/*delete userinfo;
-					userinfo = NULL;*/
+					m_UserInfoMap[m_cs_ComUserInfo.AddString(userinfo->GetUserName())]
+					= *userinfo;
+					delete userinfo;
+					userinfo = NULL;
 				}
 			}while(!ar.IsBufferEmpty());
 			ar.Close();
@@ -215,6 +220,17 @@ void CQueueCallerDlg::OnBnClickedCheckAutologin()
 }
 
 void CQueueCallerDlg::OnCbnSelchangeComboUsername()
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	if (!m_strUserName.IsEmpty())
+	{
+		CButton* button = (CButton*)GetDlgItem(IDC_BUTTON_CHANGEPASSWORD);
+		button->EnableWindow(FALSE);
+	}	
+}
+
+void CQueueCallerDlg::OnCbnEditchangeComboUsername()
 {
 	// TODO: 在此添加控件通知处理程序代码
 }

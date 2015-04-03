@@ -2,7 +2,7 @@
 //
 
 #pragma once
-#include "DataDef.h"
+#include "UserInfo.h"
 
 // CQueueCallerDlg ¶Ô»°¿ò
 class CQueueCallerDlg : public CDialog
@@ -44,5 +44,7 @@ private:
 	CString m_strUserName;
 	CString m_strUserInfoFilePath;
 	CComboBox m_cs_ComUserInfo;
-	CMap<int,int,UserInfo,UserInfo> m_UserInfoMap;
+	CMap<int,int,CUserInfo,CUserInfo> m_UserInfoMap;
+public:
+	afx_msg void OnCbnEditchangeComboUsername();
 };

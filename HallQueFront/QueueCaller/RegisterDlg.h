@@ -1,5 +1,5 @@
 #pragma once
-#include "DataDef.h"
+#include "UserInfo.h"
 
 // CRegisterDlg 对话框
 
@@ -13,17 +13,17 @@ public:
 
 // 对话框数据
 	enum { IDD = IDD_REGISTERDLG };
-
+	afx_msg void OnBnClickedIDOK();
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
+	virtual BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
 private:
 	CString m_strUserName;
 	CString m_strPassWord;
 	CString m_strPassWord2;
 	CString m_strUserInfoFilePath;
-	CMap<int,int,UserInfo,UserInfo> m_UserInfoMap;
+	CMap<int,int,CUserInfo,CUserInfo> m_UserInfoMap;
 	BOOL WriteUserInfoIntoFiles();
 	BOOL ReadUserInfoFromFiles();
 };

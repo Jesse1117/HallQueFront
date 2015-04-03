@@ -3,6 +3,8 @@
 
 IMPLEMENT_SERIAL(CUserInfo,CObject,1);
 CUserInfo::CUserInfo(void)
+:m_isAutoLogin(FALSE)
+,m_isRemember(FALSE)
 {
 }
 

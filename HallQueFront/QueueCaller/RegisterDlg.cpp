@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "QueueCaller.h"
 #include "RegisterDlg.h"
-#include "CommonConvert.h"
+#include "CommonStrMethod.h"
 
 // CRegisterDlg 对话框
 
@@ -16,9 +16,10 @@ CRegisterDlg::CRegisterDlg(CWnd* pParent /*=NULL*/)
 	, m_strPassWord(_T(""))
 	, m_strPassWord2(_T(""))
 {
-	CCommonConvert convert;
-	m_strUserInfoFilePath = convert.GetExeFullFilePath();
-	m_strUserInfoFilePath+=_T("\\UserInfo\\UserInfo.dat");
+	CommonStrMethod convert;
+	m_strUserInfoFilePath = convert.GetModuleDir()+_T("UserInfo\\");
+	convert.CreatePath(m_strUserInfoFilePath);
+	m_strUserInfoFilePath+=_T("UserInfo.dat");
 }
 
 CRegisterDlg::~CRegisterDlg()
@@ -35,18 +36,28 @@ void CRegisterDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CRegisterDlg, CDialog)
+	ON_BN_CLICKED(IDOK, &CRegisterDlg::OnBnClickedIDOK)
 END_MESSAGE_MAP()
 
 
 // CRegisterDlg 消息处理程序
 
+BOOL CRegisterDlg::OnInitDialog()
+{
+	CDialog::OnInitDialog();
+	ReadUserInfoFromFiles();
+	return TRUE;
+}
+
+
 BOOL CRegisterDlg::ReadUserInfoFromFiles()
 {
+	m_UserInfoMap.RemoveAll();
 	CFile file;
 	CFileException e;
 	if (file.Open(m_strUserInfoFilePath,CFile::modeRead,&e))
 	{
-		UserInfo* userinfo=NULL;
+		CUserInfo* userinfo=NULL;
 		CArchive ar(&file,CArchive::load);
 		int index=0;
 		if (file.GetLength()) 
@@ -79,7 +90,7 @@ BOOL CRegisterDlg::WriteUserInfoIntoFiles()
 		for (int i=0;i<count;i++)
 		{
 			CArchive ar(&file,CArchive::store);
-			UserInfo userinfo;
+			CUserInfo userinfo;
 			m_UserInfoMap.Lookup(i,userinfo);
 			ar<<&userinfo;
 			ar.Close();
@@ -92,4 +103,35 @@ BOOL CRegisterDlg::WriteUserInfoIntoFiles()
 		TRACE(_T("File could not be opened %d\n"), e.m_cause);
 		return FALSE;
 	}
+}
+
+void CRegisterDlg::OnBnClickedIDOK()
+{
+	UpdateData();
+	if (m_strUserName.IsEmpty())
+	{
+		AfxMessageBox(_T("用户名不能为空"));
+		return;
+	}
+	for (int i=0;i<m_UserInfoMap.GetCount();i++)
+	{
+		CUserInfo userinfo;
+		m_UserInfoMap.Lookup(i,userinfo);
+		if (m_strUserName == userinfo.GetUserName())
+		{
+			AfxMessageBox(_T("用户名已经存在"));
+			return;
+		}
+	}
+	if (m_strPassWord!=m_strPassWord2)
+	{
+		AfxMessageBox(_T("两次密码输入不一致"));
+		return;
+	}
+	CUserInfo userinfo;
+	userinfo.SetUserName(m_strUserName);
+	userinfo.SetPassWord(m_strPassWord);
+	m_UserInfoMap.SetAt(m_UserInfoMap.GetCount(),userinfo);
+	WriteUserInfoIntoFiles();
+	return CDialog::OnOK();
 }
