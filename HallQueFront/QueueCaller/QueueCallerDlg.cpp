@@ -74,6 +74,7 @@ BEGIN_MESSAGE_MAP(CQueueCallerDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_TIMER()
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_BUTTON_REGISTER, &CQueueCallerDlg::OnBnClickedButtonRegister)
 	ON_BN_CLICKED(IDC_BUTTON_FINDPASSWORD, &CQueueCallerDlg::OnBnClickedButtonFindpassword)
@@ -88,7 +89,7 @@ END_MESSAGE_MAP()
 // CQueueCallerDlg 消息处理程序
 
 BOOL CQueueCallerDlg::OnInitDialog()
-{
+{		
 	CDialog::OnInitDialog();
 
 	// 将“关于...”菜单项添加到系统菜单中。
@@ -115,11 +116,51 @@ BOOL CQueueCallerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	
-
 	ReadUserFileFromFiles();
+	//for (int i=0;i<m_UserInfoMap.GetCount();i++)
+	//{
+	//	CUserInfo info;
+	//	m_UserInfoMap.Lookup(i,info);
+	//	if (info.isLogin())
+	//	{
+	//		CVirtualCallerDlg* VirtualDlg = new CVirtualCallerDlg(this,info.GetUserName());
+	//		VirtualDlg->Create(IDD_DIALOG_CALLER);
+	//		VirtualDlg->ShowWindow(SW_SHOWNORMAL);
+	//		ModifyStyleEx(WS_EX_APPWINDOW,WS_EX_TOOLWINDOW);//从任务栏中去掉.
+	//		WINDOWPLACEMENT wp;
+	//		wp.length=sizeof(WINDOWPLACEMENT);
+	//		wp.flags=WPF_RESTORETOMAXIMIZED;
+	//		wp.showCmd=SW_HIDE;
+	//		SetWindowPlacement(&wp);
+	//		break;  
+	//	}
+	//}
+	SetTimer(1,1,NULL);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
+
+void CQueueCallerDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if (nIDEvent==1)
+	{
+		KillTimer(1);
+		for (int i=0;i<m_UserInfoMap.GetCount();i++)
+			{
+				CUserInfo info;
+				m_UserInfoMap.Lookup(i,info);
+				if (info.isLogin())
+				{
+					CVirtualCallerDlg* VirtualDlg = new CVirtualCallerDlg(this,info.GetUserName());
+					VirtualDlg->Create(IDD_DIALOG_CALLER);
+					VirtualDlg->ShowWindow(SW_SHOWNORMAL);
+					break;  
+				}
+			}
+	}
+	CDialog::OnTimer(nIDEvent);
+}
+
 
 void CQueueCallerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
@@ -183,6 +224,8 @@ void CQueueCallerDlg::OnBnClickedButtonRegister()
 
 BOOL CQueueCallerDlg::ReadUserFileFromFiles()
 {
+	m_UserInfoMap.RemoveAll();
+	m_cs_ComUserInfo.ResetContent();
 	CFile file;
 	CFileException e;
 	if (file.Open(m_strUserInfoFilePath,CFile::modeRead,&e))
@@ -229,6 +272,30 @@ void CQueueCallerDlg::OnBnClickedCheckAutologin()
 void CQueueCallerDlg::OnCbnSelchangeComboUsername()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	UpdateData();
+		for (int i=0;i<m_UserInfoMap.GetCount();i++)
+		{
+			CUserInfo info;
+			m_UserInfoMap.Lookup(i,info);
+			CString strUser;
+			m_cs_ComUserInfo.GetLBText(m_cs_ComUserInfo.GetCurSel(),strUser);
+			if (strUser==info.GetUserName())
+			{
+				if (info.IsRemember())
+				{
+					m_strPassWord=info.GetPassWord();
+					m_cs_Remember.SetCheck(BST_CHECKED);								
+				}
+				else m_cs_Remember.SetCheck(BST_UNCHECKED);
+				if (info.isLogin())
+				{
+					m_cs_AutoLogin.SetCheck(BST_CHECKED);
+				}
+				else m_cs_AutoLogin.SetCheck(BST_UNCHECKED);
+				UpdateData(FALSE);	
+				break;
+			}
+		}
 		CButton* button = (CButton*)GetDlgItem(IDC_BUTTON_CHANGEPASSWORD);
 		button->EnableWindow();
 
@@ -263,16 +330,20 @@ void CQueueCallerDlg::OnBnClickedButtonLogin()
 			if (m_strPassWord==info.GetPassWord())
 			{
 				if (m_cs_AutoLogin.GetCheck()==BST_CHECKED)
+				{
+					SetOrtherUnAuto();
+
 					info.SetLogin(TRUE);
+				}
 				if (m_cs_Remember.GetCheck()==BST_CHECKED)
 					info.SetRemember(TRUE);
 				m_UserInfoMap.SetAt(i,info);
-
-				CVirtualCallerDlg* VirtualDlg = new CVirtualCallerDlg();
+				WriteUserInfoIntoFiles();
+				CVirtualCallerDlg* VirtualDlg = new CVirtualCallerDlg(this,info.GetUserName());
 				VirtualDlg->Create(IDD_DIALOG_CALLER);
 				VirtualDlg->ShowWindow(SW_SHOWNORMAL);
 
-				this->ShowWindow(SW_HIDE);
+				//this->ShowWindow(SW_HIDE);
 			}
 			else
 			{
@@ -280,5 +351,41 @@ void CQueueCallerDlg::OnBnClickedButtonLogin()
 				return;
 			}
 		}
+	}
+}
+
+BOOL CQueueCallerDlg::WriteUserInfoIntoFiles()
+{
+	CFile file;
+	CFileException e;
+	if (file.Open(m_strUserInfoFilePath,CFile::modeCreate|CFile::modeWrite,&e))
+	{
+		int count = m_UserInfoMap.GetCount();
+		for (int i=0;i<count;i++)
+		{
+			CArchive ar(&file,CArchive::store);
+			CUserInfo userinfo;
+			m_UserInfoMap.Lookup(i,userinfo);
+			ar<<&userinfo;
+			ar.Close();
+		}
+		file.Close();
+		return TRUE;
+	}
+	else
+	{
+		TRACE(_T("File could not be opened %d\n"), e.m_cause);
+		return FALSE;
+	}
+}
+
+void CQueueCallerDlg::SetOrtherUnAuto()
+{
+	for (int i=0;i<m_UserInfoMap.GetCount();i++)
+	{
+		CUserInfo info;
+		m_UserInfoMap.Lookup(i,info);
+		info.SetLogin(FALSE);
+		m_UserInfoMap.SetAt(i,info);
 	}
 }

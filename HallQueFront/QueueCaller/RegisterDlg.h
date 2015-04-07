@@ -26,4 +26,6 @@ private:
 	CMap<int,int,CUserInfo,CUserInfo> m_UserInfoMap;
 	BOOL WriteUserInfoIntoFiles();
 	BOOL ReadUserInfoFromFiles();
+public:
+//	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

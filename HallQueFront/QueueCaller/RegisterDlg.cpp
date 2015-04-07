@@ -37,6 +37,7 @@ void CRegisterDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CRegisterDlg, CDialog)
 	ON_BN_CLICKED(IDOK, &CRegisterDlg::OnBnClickedIDOK)
+//	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -135,3 +136,9 @@ void CRegisterDlg::OnBnClickedIDOK()
 	WriteUserInfoIntoFiles();
 	return CDialog::OnOK();
 }
+//void CRegisterDlg::OnTimer(UINT_PTR nIDEvent)
+//{
+//	// TODO: 在此添加消息处理程序代码和/或调用默认值
+//
+//	CDialog::OnTimer(nIDEvent);
+//}

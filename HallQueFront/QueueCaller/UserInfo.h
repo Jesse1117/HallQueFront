@@ -18,7 +18,7 @@ public:
 	BOOL isLogin()const{return m_isAutoLogin;}
 	void SetLogin(const BOOL& bAutologin){m_isAutoLogin = bAutologin;}
 
-	BOOL IsRemember()const{return m_isAutoLogin;}
+	BOOL IsRemember()const{return m_isRemember;}
 	void SetRemember(const BOOL& bRemember){m_isRemember = bRemember;}
 
 	virtual void Serialize( CArchive& ar );//支持序列化

@@ -33,12 +33,14 @@ public:
 
 private:
 	BOOL ReadUserFileFromFiles();
+	BOOL WriteUserInfoIntoFiles();
+	void SetOrtherUnAuto();
 public:
 	afx_msg void OnBnClickedButtonFindpassword();
 	afx_msg void OnBnClickedCheckRemember();
 	afx_msg void OnBnClickedCheckAutologin();
 	afx_msg void OnCbnSelchangeComboUsername();
-
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 private:
 	CString m_strPassWord;
 	CString m_strUserName;

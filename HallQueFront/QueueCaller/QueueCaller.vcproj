@@ -186,6 +186,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\CallJttsSetDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ChangePassWordDlg.cpp"
 				>
 			</File>
@@ -198,6 +202,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ListBoxPlus.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MyListBox.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\QueueCaller.cpp"
 				>
 			</File>
@@ -207,6 +219,10 @@
 			</File>
 			<File
 				RelativePath=".\RegisterDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ShowMsgSetDlg.cpp"
 				>
 			</File>
 			<File
@@ -244,6 +260,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\CallJttsSetDlg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ChangePassWordDlg.h"
 				>
 			</File>
@@ -260,6 +280,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ListBoxPlus.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MyListBox.h"
+				>
+			</File>
+			<File
 				RelativePath=".\QueueCaller.h"
 				>
 			</File>
@@ -273,6 +301,10 @@
 			</File>
 			<File
 				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ShowMsgSetDlg.h"
 				>
 			</File>
 			<File
