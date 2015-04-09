@@ -71,6 +71,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\QueueCaller.ico"
+IDI_MAINFRAME           ICON                    "res\\HallQueFrontServer.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -135,16 +136,6 @@ BEGIN
     LTEXT           "确认新密码",IDC_STATIC,27,92,41,8
 END
 
-IDD_DIALOG_CALLER DIALOGEX 0, 0, 200, 324
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "呼叫终端"
-MENU IDR_MENU1
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "确定",IDOK,21,259,50,43
-    PUSHBUTTON      "取消",IDCANCEL,125,258,50,42
-END
-
 IDD_DIALOG_JTTSCALLSET DIALOGEX 0, 0, 406, 255
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "声音配置"
@@ -201,17 +192,26 @@ BEGIN
     LTEXT           "秒后显示广告语",IDC_STATIC,60,218,57,8
 END
 
-IDD_DIALOG2 DIALOGEX 0, 0, 252, 182
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_DIALOG_COMSET DIALOGEX 0, 0, 242, 207
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "综合设置"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "确定",IDOK,64,161,50,14
-    PUSHBUTTON      "取消",IDCANCEL,152,161,50,14
-    LTEXT           "接收数据IP：",IDC_STATIC,34,34,48,8
-    EDITTEXT        IDC_EDIT_IP,100,31,123,14,ES_AUTOHSCROLL
-    LTEXT           "端口：",IDC_STATIC,34,65,25,8
-    EDITTEXT        IDC_EDIT_PORT,100,62,123,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "确定",IDOK,86,177,50,14
+    PUSHBUTTON      "取消",IDCANCEL,160,177,50,14
+    LTEXT           "接收数据IP：",IDC_STATIC,21,22,48,8
+    EDITTEXT        IDC_EDIT_IP,77,19,123,14,ES_AUTOHSCROLL
+    LTEXT           "端           口：",IDC_STATIC,21,49,47,8
+    EDITTEXT        IDC_EDIT_PORT,77,46,123,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "窗口屏地址：",IDC_STATIC,21,103,49,8
+    EDITTEXT        IDC_EDIT_WNDID,77,100,123,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "呼 叫 名 称：",IDC_STATIC,21,130,47,8
+    EDITTEXT        IDC_EDIT_CALLNAME,78,127,123,14,ES_AUTOHSCROLL
+    LTEXT           "延 迟 时 间：",IDC_STATIC,21,76,47,8
+    EDITTEXT        IDC_EDIT_WAITTIME,77,73,123,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "（分）",IDC_STATIC,205,77,25,8
+    LTEXT           "呼 叫 次 数：",IDC_STATIC,21,158,47,8
+    EDITTEXT        IDC_EDIT_PLAYTIME,78,154,123,14,ES_AUTOHSCROLL | ES_NUMBER
 END
 
 
@@ -295,14 +295,6 @@ BEGIN
         BOTTOMMARGIN, 139
     END
 
-    IDD_DIALOG_CALLER, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 193
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 317
-    END
-
     IDD_DIALOG_JTTSCALLSET, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -319,12 +311,12 @@ BEGIN
         BOTTOMMARGIN, 258
     END
 
-    IDD_DIALOG2, DIALOG
+    IDD_DIALOG_COMSET, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 245
+        RIGHTMARGIN, 235
         TOPMARGIN, 7
-        BOTTOMMARGIN, 175
+        BOTTOMMARGIN, 200
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -339,14 +331,10 @@ IDR_MENU1 MENU
 BEGIN
     POPUP "设置"
     BEGIN
-        MENUITEM "呼叫语音设置",                      ID_32773
-        MENUITEM "呼叫显示设置",                      ID_32774
-        MENUITEM "综合设置",                        ID_32775
-    END
-    POPUP "操作"
-    BEGIN
-        MENUITEM "切换用户",                        ID_32771
-        MENUITEM "退出",                          ID_32772
+        MENUITEM "呼叫语音设置",                      ID_CALLSET
+        MENUITEM "呼叫显示设置",                      ID_SHOWSET
+        MENUITEM "综合设置",                        ID_COMSET
+        MENUITEM "退出",                          ID_QUIT
     END
 END
 

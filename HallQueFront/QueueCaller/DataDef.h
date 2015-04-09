@@ -8,11 +8,14 @@ struct UserInfo{
 	BOOL isRemember;
 };
 
-struct ComInfo{
+typedef struct _tagComInfo{
 	CString strIP;
-	CString strPort;
-	
-};
+	CString strPort;	
+	UINT iWndId;
+	CString strCallName;
+	UINT iWatiTime;
+	UINT iPlayTimes;
+}ComInfo,*pComInfo;
 
 typedef struct _tagShowInfomation
 {

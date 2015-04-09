@@ -15,7 +15,6 @@ SLZWindow::SLZWindow(void) : m_iCallerId(0)
 , m_iShowWndId(0)
 , m_iLEDPipeId(0)
 {
-	
 	m_ShowMsg = _T("#0#请#2#[排队号码]#0#号#2#[客户姓名]#0#到#2#[窗口名称]#0#办理业务#0#   Please No.#2#[排队号码(英)]#0# to the #2#[窗口名称(英)]#0# for business.");
 	m_CalledMsg = _T("#请#[排队号码]#号到#[呼叫名称]#办理业务#please#number#[排队号码(英)]#goto#[呼叫名称(英)]#for#business");
 	m_WaitShowMsg = _T("#0#请#2#[排队号码]#0#号#2#[客户姓名]#0#做好准备#0#   Please No.#2#[排队号码]#0#  get ready.");

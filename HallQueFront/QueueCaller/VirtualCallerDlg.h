@@ -1,6 +1,6 @@
 #pragma once
 #include "CallerInfo.h"
-
+#include "DataDef.h"
 // CVirtualCallerDlg ¶Ô»°¿ò
 
 class CVirtualCallerDlg : public CDialog
@@ -24,7 +24,9 @@ public:
 private:
 	CString m_strUserName;
 	CallerInfo m_info;
-
+	int m_index;
+	CMap<int,int,CallerInfo,CallerInfo> m_CallerInfoMap;
+	CString m_strCallerInfoPath;
 	BOOL ReadCallerInfoFromFile();
 	BOOL WriteCallerInfoIntoFile();
 public:

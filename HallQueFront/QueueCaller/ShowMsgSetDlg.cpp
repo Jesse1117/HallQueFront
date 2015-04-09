@@ -10,13 +10,14 @@
 
 IMPLEMENT_DYNAMIC(CShowMsgSetDlg, CDialog)
 
-CShowMsgSetDlg::CShowMsgSetDlg(pShowInfo showinfo,CWnd* pParent /*=NULL*/)
+CShowMsgSetDlg::CShowMsgSetDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CShowMsgSetDlg::IDD, pParent)
-	, m_strConf(showinfo->strShowMsg)
-	,m_strAdMsg(showinfo->strAdMsg)
-	,m_iShowTime(showinfo->iShowTime)
 {
 	m_bMkShowAll = FALSE;
+	m_strCallPath = CommonStrMethod::GetModuleDir();
+	m_strCallPath+=_T("\\config");
+	CommonStrMethod::CreatePath(m_strCallPath);
+	m_strCallPath+=_T("\\CallerSet.ini");
 }
 
 CShowMsgSetDlg::~CShowMsgSetDlg()
@@ -32,7 +33,7 @@ void CShowMsgSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX,IDC_CHECK_MKSHALL,m_check_mkshowall);
 	DDX_Control(pDX,IDC_RAD_SHOWCHN,m_Sel_Chinese);
 	DDX_Control(pDX,IDC_RAD_SHOWENG,m_Sel_English);
-	DDX_Text(pDX,IDC_EDIT_SHOWTIME,m_iShowTime);
+	DDX_Text(pDX,IDC_EDIT_SHOWTIME,m_ed_strShowTime);
 	DDX_Text(pDX,IDC_EDIT_ADMSG,m_ed_strAdmsg);
 }
 
@@ -100,12 +101,25 @@ BOOL CShowMsgSetDlg::OnInitDialog()
 	m_combColor.SetItemData(nItem, COLORREF_GREEN);
 	nItem = m_combColor.AddString(_T("黄"));
 	m_combColor.SetItemData(nItem, COLORREF_YELLOW);
-	m_ed_strShowTime = CommonStrMethod::Int2Str(m_iShowTime);
-	m_ed_strAdmsg = m_strAdMsg;
-	UpdateData(FALSE);
+	//m_ed_strShowTime = CommonStrMethod::Int2Str(m_iShowTime);
+	//m_ed_strAdmsg = m_strAdMsg;
+
+	wchar_t wbuf[255];
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CallSet"),_T("ShowMsg"),NULL,wbuf,255,m_strCallPath);
+	CString strShowMsg(wbuf);
+	m_strConf = strShowMsg;
 	CArray<CString> arr;
 	SplitColorStringToArray(m_strConf, arr);
-
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CallSet"),_T("ShowTime"),NULL,wbuf,255,m_strCallPath);
+	CString strShowTime(wbuf);
+	m_ed_strShowTime = strShowTime;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CallSet"),_T("AdMsg"),NULL,wbuf,255,m_strCallPath);
+	CString strAd(wbuf);
+	m_ed_strAdmsg = strAd;
+	UpdateData(FALSE);
 // 	/*m_mylbList.Create(WS_CHILD | WS_VISIBLE | WS_BORDER | WS_HSCROLL | WS_VSCROLL |  
 // 		LBS_OWNERDRAWVARIABLE | LBS_HASSTRINGS, NULL, this, IDC_LIST_SHOWMSG);  
 //	ListView_SetExtendedListViewStyle(m_mylbList.m_hWnd, WS_CHILD | WS_VISIBLE | WS_BORDER 
@@ -134,6 +148,7 @@ BOOL CShowMsgSetDlg::OnInitDialog()
 	}
 	m_mylbList.SetCurSel(m_mylbList.GetCount()-1);
 	//OnLbnSelchangeListShowmsg();
+	CenterWindow(GetDesktopWindow());
 	return TRUE;
 }
 // CShowMsgSetDlg 消息处理程序
@@ -295,6 +310,9 @@ void CShowMsgSetDlg::OnBnClickedOk()
 	m_strConf = strDisplayCall;
 	m_strAdMsg = m_ed_strAdmsg;
 	m_iShowTime = CommonStrMethod::Str2Int(m_ed_strShowTime);
+	WritePrivateProfileString(_T("CallSet"),_T("ShowMsg"),m_strConf,m_strCallPath);
+	WritePrivateProfileString(_T("CallSet"),_T("AdMsg"),m_strAdMsg,m_strCallPath);
+	WritePrivateProfileString(_T("CallSet"),_T("ShowTime"),m_ed_strShowTime,m_strCallPath);
 	OnOK();
 }
 

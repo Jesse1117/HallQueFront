@@ -9,7 +9,7 @@ class CCallJttsSetDlg : public CDialog
 	DECLARE_DYNAMIC(CCallJttsSetDlg)
 
 public:
-	CCallJttsSetDlg(CString& strConf,CWnd* pParent = NULL);   // 标准构造函数
+	CCallJttsSetDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CCallJttsSetDlg();
 
 // 对话框数据
@@ -19,13 +19,15 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	virtual BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
+public:
+	CString m_StrConf;
 private:
-	CString& m_StrConf;
 	CListBox m_lbList;
 	CListBox m_lbWavLib;
 	CButton m_check_mkjttsall;
 	CButton m_Sel_CommonChinese;
 	CButton m_Sel_English;
+	CString m_strCallPath;
 public:
 	afx_msg void OnBnClickedButtonQuenum();
 	afx_msg void OnBnClickedButtonWndname();

@@ -10,11 +10,14 @@
 
 IMPLEMENT_DYNAMIC(CCallJttsSetDlg, CDialog)
 
-CCallJttsSetDlg::CCallJttsSetDlg(CString& strConf,CWnd* pParent /*=NULL*/)
+CCallJttsSetDlg::CCallJttsSetDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CCallJttsSetDlg::IDD, pParent)
-	, m_StrConf(strConf)
 {
 	m_bMkJttsAll = FALSE;
+	m_strCallPath = CommonStrMethod::GetModuleDir();
+	m_strCallPath+=_T("\\config");
+	CommonStrMethod::CreatePath(m_strCallPath);
+	m_strCallPath+=_T("\\CallerSet.ini");
 }
 
 CCallJttsSetDlg::~CCallJttsSetDlg()
@@ -52,6 +55,11 @@ BOOL CCallJttsSetDlg::OnInitDialog()
 	//m_pRset->GetFieldValue(_T("sound_wait"), strSound);
 	m_check_mkjttsall.SetCheck(BST_UNCHECKED);
 	m_Sel_CommonChinese.SetCheck(BST_CHECKED);
+	wchar_t wbuf[255];
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CallSet"),_T("CallMsg"),NULL,wbuf,255,m_strCallPath);
+	CString strCallMsg(wbuf);
+	m_StrConf = strCallMsg;
 	CStringArray arrStr;
 	CommonStrMethod::StrSplit(m_StrConf, arrStr,_T("#"));
 	for(int i = 1; i < arrStr.GetCount(); i++)
@@ -181,7 +189,7 @@ void CCallJttsSetDlg::OnBnClickedOk()
 		strAll += _T("#")+strLine;
 	}
 
-	m_StrConf = strAll;
+	WritePrivateProfileString(_T("CallSet"),_T("CallMsg"),strAll,m_strCallPath);
 	OnOK();
 }
 

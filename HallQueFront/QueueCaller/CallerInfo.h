@@ -73,6 +73,36 @@ public:
 		m_strAdMsg=AdMsg;
 	}
 
+	CString GetStrIP()
+	{
+		return m_strIP;
+	}
+	void SetStrIP(const CString strIP)
+	{
+		m_strIP = strIP;
+	}
+
+	CString GetStrPort()
+	{
+		return m_strPort;
+	}
+	void SetStrPort(const CString strPort)
+	{
+		m_strPort = strPort;
+	}
+
+	UINT GetWatiTime()
+	{
+		return m_iWaitTime;
+	}
+	void SetWaitTime(const UINT iWatiTime)
+	{
+		m_iWaitTime = iWatiTime;
+	}
+
+	UINT GetPlayTimes(){return m_iPlayTimes;}
+	void SetPlayTimes(const UINT iPlayTimes){m_iPlayTimes = iPlayTimes;}
+
 	virtual void Serialize( CArchive& ar );//支持序列化
 	DECLARE_SERIAL(CallerInfo)
 
@@ -84,4 +114,8 @@ private:
 	CString m_strShowMsg;
 	unsigned int m_iMsgShowTime;		//信息显示时间
 	CString m_strAdMsg;				//广告信息
+	CString m_strIP;
+	CString m_strPort;
+	UINT m_iWaitTime;
+	UINT m_iPlayTimes;
 };

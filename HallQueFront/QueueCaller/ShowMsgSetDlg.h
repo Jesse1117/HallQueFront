@@ -11,7 +11,7 @@ class CShowMsgSetDlg : public CDialog
 
 public:
 	//CShowMsgSetDlg(CString& strConf,CWnd* pParent = NULL);   // 标准构造函数
-	CShowMsgSetDlg(pShowInfo showinfo,CWnd* pParent = NULL);
+	CShowMsgSetDlg(CWnd* pParent = NULL);
 	virtual ~CShowMsgSetDlg();
 
 // 对话框数据
@@ -25,15 +25,16 @@ public:
 	CEdit m_editTextAdd;
 	CMyListBox m_mylbList; 
 	CComboBox m_combColor;
-	CString& m_strConf;
-	CString& m_strAdMsg;
-	UINT& m_iShowTime;
+	CString m_strConf;
+	CString m_strAdMsg;
+	UINT m_iShowTime;
 	BOOL m_bMkShowAll;
 	CButton m_check_mkshowall;
 	CButton m_Sel_Chinese;
 	CButton m_Sel_English;
 	CString m_ed_strAdmsg;
 	CString m_ed_strShowTime;
+	CString m_strCallPath;
 	afx_msg void OnBnClickedBtnAddtext();
 	afx_msg void OnLbnSelchangeListShowmsg();
 	afx_msg void OnBnClickedBtnChangemsg();
