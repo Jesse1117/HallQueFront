@@ -363,8 +363,9 @@ UINT SLZController::TakingViewThreadProc(LPVOID pParam)
 		{
 		if(theApp.m_pView->HasData())
 		{
-			CString queserial_id=theApp.m_pView->GetData();
-			if (queserial_id == L"短信提示")
+			CARDINFO cardinfo=theApp.m_pView->GetData();
+			CString queserial_id = cardinfo.strAttchQueID;
+			if ( queserial_id== L"短信提示")
 			{
 				CShortMsgSetDlg MsgDlg(NULL,*pControl->m_pInlineQueData);
 				if(MsgDlg.DoModal()==IDOK)
@@ -392,6 +393,7 @@ UINT SLZController::TakingViewThreadProc(LPVOID pParam)
 						}
 						else
 						{
+							data.SetPhoneNum(cardinfo.strPhoneNum);
 							//设置排队号码
 							unsigned int CurNum=0;
 							UINT iQueNum;
@@ -448,7 +450,7 @@ UINT SLZController::TakingViewThreadProc(LPVOID pParam)
 //								Sleep(1000);
 //								theApp.m_pView->ShowPage(0);//返回主界面
 								UINT nPageID = 0;
-								SendMessage(theApp.m_pView->m_hWnd,WM_SHOWPAGE,(WPARAM)nPageID,NULL);
+								SendMessage(theApp.m_pView->m_hWnd,WM_SHOWFIRSTPAGE,(WPARAM)nPageID,NULL);
 							}
 							break;
 						}

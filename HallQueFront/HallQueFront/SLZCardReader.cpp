@@ -5,7 +5,7 @@
 #include "DoFile.h"
 #include "HallQueFront.h"
 #include "TCPConnect.h"
-
+#include "InputNumberDlg.h"
 extern  void MyWriteConsole(CString str); 
 
 SLZCardReader::SLZCardReader(void) : m_hReadTread(NULL),
@@ -153,46 +153,21 @@ BOOL SLZCardReader::ReadMsg()
 	cardinfo.iCardType=cardIDCard;
 	cardinfo.strCardNumber=num;//卡号
 	cardinfo.strCustName=name;//姓名
-	
-	if(m_cardConnectInfo.IsConnect)//对接
+	if (!cardinfo.strCardNumber.IsEmpty())
 	{
-		///对接获取该身份证对应的级别和应该排哪个队列
-		
-		//int nLev = GetCustLev(cardinfo.strCardNumber);
-		//if(nLev!=-1)
-		//{
-		//	CString queID = JudgeCardAttchQue(nLev);
-		//	cardinfo.strAttchQueID = queID;
-		//	cardinfo.iCustLevel = nLev;
-		//}
-		//if(!theApp.m_Controller.JudgeWorkTimeOut(cardinfo.strAttchQueID)&&!cardinfo.strAttchQueID.IsEmpty())
-		//{
-		//	m_CardReaderMutex.Lock();
-		//	m_CardInfoList.AddTail(cardinfo); //加入缓冲区
-		//	m_CardReaderMutex.Unlock();
-		//}
-		
-	}
-	else//不对接
-	{
-		cardinfo.iCustLevel=0;
-		CString queID(m_cardConnectInfo.RegAttchQueID);//身份证关联队列ID
-		if (!queID.IsEmpty())
+		CInputNumberDlg InputDlg(theApp.m_pView);
+		if (IDOK==InputDlg.DoModal())
 		{
-			cardinfo.strAttchQueID = queID;
-			//没有超出工作时间
-			if(!theApp.m_Controller.JudgeWorkTimeOut(queID))
+			if (!InputDlg.m_strPhoneNum.IsEmpty())
 			{
-				m_CardReaderMutex.Lock();
-				m_CardInfoList.AddTail(cardinfo); //加入缓冲区
-				m_CardReaderMutex.Unlock();
+				cardinfo.strPhoneNum = InputDlg.m_strPhoneNum;
+				cardinfo.nAttchPageID = 1;
+				SendMessage(theApp.m_pView->m_hWnd,WM_SHOWPAGE,(WPARAM)&cardinfo,NULL);
 			}
 		}
-		///链接界面
-		cardinfo.nAttchPageID = m_cardConnectInfo.RegAttchPageID;
-//		theApp.m_pView->ShowPage(cardinfo.nAttchPageID);
-		SendMessage(theApp.m_pView->m_hWnd,WM_SHOWPAGE,(WPARAM)cardinfo.nAttchPageID,NULL);
+
 	}
+
 	return TRUE;
 }
 
