@@ -3,6 +3,7 @@
 #include "afxwin.h"
 // CComSetDlg ¶Ô»°¿ò
 #define WM_MY_TRAYICON (WM_USER+100)
+class CTcpSever;
 class CComSetDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CComSetDlg)
@@ -35,6 +36,7 @@ public:
 	UINT m_iPlayTimes;
 	CString m_strPlayTimes;
 	CString m_strCallPath;
+	CString m_strSelfPort;
 private:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnClose();
@@ -44,6 +46,7 @@ private:
 	BOOL TaskBarDeleteIcon(HWND hwnd, UINT uID);
 	void RemoveTrayIcon();
 	void LoadInfo();
+	CTcpSever* m_pSever;
 public:
 	afx_msg void OnCallset();
 	afx_msg void OnShowset();

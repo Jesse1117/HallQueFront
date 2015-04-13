@@ -8,6 +8,7 @@
 #include "CallJttsSetDlg.h"
 #include "ShowMsgSetDlg.h"
 #include "CommonStrMethod.h"
+#include "TcpSever.h"
 // CComSetDlg 对话框
 
 IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
@@ -15,6 +16,7 @@ IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
 CComSetDlg::CComSetDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CComSetDlg::IDD, pParent)
 {
+	m_pSever = new CTcpSever();
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_MAINFRAME);
 	m_strCallPath = CommonStrMethod::GetModuleDir();
 	m_strCallPath+=_T("\\config");
@@ -35,6 +37,7 @@ void CComSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX,IDC_EDIT_CALLNAME,m_strCallName);
 	DDX_Text(pDX,IDC_EDIT_WAITTIME,m_strWatiTime);
 	DDX_Text(pDX,IDC_EDIT_PLAYTIME,m_strPlayTimes);
+	DDX_Text(pDX,IDC_EDIT_SELFPORT,m_strSelfPort);
 }
 
 
@@ -62,6 +65,7 @@ BOOL CComSetDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 	AddTrayIcon();
+	m_pSever->Start();
 	SetTimer(11,10,NULL);
 	return TRUE;
 }
@@ -93,6 +97,10 @@ void CComSetDlg::LoadInfo()
 	GetPrivateProfileString(_T("CompSet"),_T("PlayTimes"),NULL,wbuf,255,m_strCallPath);
 	CString strPlayTimes(wbuf);
 	m_strPlayTimes = strPlayTimes;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("SelfPort"),NULL,wbuf,255,m_strCallPath);
+	CString strSelfPort(wbuf);
+	m_strSelfPort = strSelfPort;
 	UpdateData(FALSE);
 }
 
@@ -107,6 +115,7 @@ void CComSetDlg::OnBnClickedOk()
 	UpdateData();
 	WritePrivateProfileString(_T("CompSet"),_T("IP"),m_strIP,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("Port"),m_strPort,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("SelfPort"),m_strSelfPort,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("WndId"),m_strWndId,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("CallName"),m_strCallName,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("WaitTime"),m_strWatiTime,m_strCallPath);

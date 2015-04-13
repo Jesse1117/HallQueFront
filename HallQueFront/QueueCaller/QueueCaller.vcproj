@@ -208,6 +208,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DealData.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ListBoxPlus.cpp"
 				>
 			</File>
@@ -224,7 +228,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SocketTcpServer.cpp"
+				RelativePath=".\SLZData.cpp"
 				>
 			</File>
 			<File
@@ -246,6 +250,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\TcpSever.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\UserInfo.cpp"
@@ -282,6 +290,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DealData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ListBoxPlus.h"
 				>
 			</File>
@@ -302,7 +314,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SocketTcpServer.h"
+				RelativePath=".\SLZData.h"
 				>
 			</File>
 			<File
@@ -311,6 +323,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TcpSever.h"
 				>
 			</File>
 			<File

@@ -253,6 +253,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CreatePacket.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CustInfo.cpp"
 				>
 			</File>
@@ -668,6 +672,10 @@
 			</File>
 			<File
 				RelativePath=".\ControlRect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CreatePacket.h"
 				>
 			</File>
 			<File

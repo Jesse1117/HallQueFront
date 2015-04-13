@@ -1,6 +1,31 @@
 #ifndef _QUEUECALLER_DATADEF_H
 #define _QUEUECALLER_DATADEF_H
 
+typedef enum _tagCmdType
+{
+	cmdNotDefined		= 0,		//未定义
+	cmdLogin			= 1,		//登录
+	cmdQuit				= 2,		//退出
+	cmdCall				= 3,		//呼叫
+	cmdRecall			= 4,		//重呼
+	cmdDiscard			= 5,		//过号
+	cmdWait				= 6,		//呼叫下一位准备
+	cmdEvaReq			= 7,		//评价请求
+	cmdPause			= 8,		//暂停
+	cmdResume			= 9,		//恢复
+	cmdCallNum			= 10,		//呼叫特定号码
+	cmdCallSec          = 11,		//呼叫保安
+	cmdCallMana			= 12,		//呼叫大堂经理
+	cmdCallBusc			= 13,		//呼叫业务顾问
+	cmdExChange			= 14,		//转移队列
+	//呼叫器显示以及其他命令
+	callerCmdShowAdd	= 15,		//显示地址
+	callerCmdShowSuc	= 16,		//显示成功(即处理成功)
+	callerCmdShowFail	= 17,		//显示失败
+	callerCmdShowNum	= 18,		//显示剩余人数
+	callerCmdShowAlarm	= 19		//发出滴滴声
+} CmdType;
+
 struct UserInfo{
 	CString UserName;
 	CString PassWord;
