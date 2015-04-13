@@ -5,6 +5,7 @@
 #include "ComplSocketClient.h"
 #include "ProducePacket.h"
 #include "ShortMsgModem.h"
+#include "CreatePacket.h"
 #include "DoFile.h"
 
 CFinshQueData::CFinshQueData(void) : m_pDoFinshedDataThread(NULL)
@@ -84,6 +85,16 @@ BOOL CFinshQueData::GetFinshedData()
  		int errCode = packet.JudgePacketRet(recvMsg);
  		if(errCode!=1) flag=FALSE; 
 	}
+	else
+	{
+		CComplSocketClient client;
+		CCreatePacket packet;
+		CString sendmsg = packet.ProducePacket(data);
+		std::string recvMsg;
+		int actRecvSize = 0;
+		flag = client.SendData(sendmsg,recvMsg,actRecvSize); 
+	}
+	
 	///////////出现差评时发送短信到手机//////////////
 	if(theApp.m_logicVariables.IsOpenJudgeShortMsg)
 	{

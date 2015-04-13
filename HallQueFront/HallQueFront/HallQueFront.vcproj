@@ -253,6 +253,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CreatePacket.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CustInfo.cpp"
 				>
 			</File>
@@ -302,6 +306,10 @@
 			</File>
 			<File
 				RelativePath=".\InlineQueData.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\InputNumberDlg.cpp"
 				>
 			</File>
 			<File
@@ -667,6 +675,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CreatePacket.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CustInfo.h"
 				>
 			</File>
@@ -724,6 +736,10 @@
 			</File>
 			<File
 				RelativePath=".\InlineQueData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\InputNumberDlg.h"
 				>
 			</File>
 			<File

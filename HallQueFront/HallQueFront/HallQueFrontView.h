@@ -132,14 +132,15 @@ public:
 	//////////////////////////////////////
 	//界面接口
 	BOOL HasData();
-	CString GetData();
+	CARDINFO GetData();
 	void ShowWaitNum(const CString& queID,const int waitNum );//显示等待人数
 	//////////////////////////////////////
 private:
-	CList<CString> m_list_address;
+	CList<CARDINFO> m_list_address;
 	CMutex m_Mlock;
 	const CString m_workTimeOut;
 	void WriteCtrlDataToList();
+	CARDINFO m_cardinfo;
 public:
 	afx_msg void OnQueset();
 	afx_msg void OnStaffset();
@@ -162,6 +163,7 @@ public:
 	afx_msg void OnStbset();
 	afx_msg LRESULT OnMyShowMessage(WPARAM wParam, LPARAM lParam);//接受界面显示缺纸消息函数
 	afx_msg LRESULT OnMyShowPage(WPARAM wParam,LPARAM lParam);//接受界面重画消息,用于slzcontrol线程调用
+	afx_msg LRESULT OnMyShowFirstPage(WPARAM wParam,LPARAM lParam);
 	ShowVariables m_showVaria;
 	afx_msg void OnViewminsize();
 public:

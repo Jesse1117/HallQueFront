@@ -67,6 +67,8 @@
 #define IDB_BITMAP_SENDMSG              185
 #define IDD_PROPMSG_JUDGE               186
 #define IDR_TIPMENU                     187
+#define IDD_DIALOG1                     188
+#define IDD_INPUTNUMERDLG               188
 #define IDC_ED_BNWIDTH                  1000
 #define IDC_ED_BNHEIGHT                 1001
 #define IDC_COMBO_TRANS                 1003
@@ -149,6 +151,7 @@
 #define IDC_BTN_SETBK                   1074
 #define IDC_BUTTON_ADDMSG               1074
 #define IDC_BN_CONTENT                  1074
+#define IDC_BUTTON_NUM1                 1074
 #define IDC_DELWND                      1075
 #define IDC_BTN_DELQUE                  1075
 #define IDC_BN_CANCEL                   1075
@@ -165,25 +168,34 @@
 #define IDC_BUTTON_QUENUMENG            1076
 #define IDC_BN_CONTENT3                 1076
 #define IDC_BN_DELMSG                   1076
+#define IDC_BUTTON_NUM3                 1076
 #define IDC_COM_TIMESTYLE               1077
 #define IDC_BTN7                        1077
 #define IDC_BUTTON_WNDNAMEENG           1077
+#define IDC_BUTTON_NUM4                 1077
 #define IDC_BTN3                        1078
+#define IDC_BUTTON_NUM5                 1078
 #define IDC_COM_QUE                     1079
 #define IDC_BTN8                        1079
+#define IDC_BUTTON_NUM6                 1079
 #define IDC_COMBO_LOGSTAFF              1080
 #define IDC_COM_CALLER                  1080
 #define IDC_COM_ATTCHQUE                1080
 #define IDC_BTN4                        1080
+#define IDC_BUTTON_NUM7                 1080
 #define IDC_COMBO2                      1081
 #define IDC_COM_READCARD                1081
 #define IDC_COM_SFZATTCHQUE             1081
 #define IDC_BTN9                        1081
+#define IDC_BUTTON_NUM8                 1081
 #define IDC_ED_PRTEXT                   1082
 #define IDC_BTN5                        1082
+#define IDC_BUTTON_NUM9                 1082
 #define IDC_BTN0                        1083
+#define IDC_BUTTON_NUM0                 1083
 #define IDC_ED_PRWIDTH                  1084
 #define IDC_BTNBK                       1084
+#define IDC_BUTTON_NUMDEL               1084
 #define IDC_ED_PRHEIGHT                 1085
 #define IDC_STA_PRTEXTCOLOR             1089
 #define IDC_BN_PRTEXTFONT               1090
@@ -355,6 +367,7 @@
 #define IDC_EDIT_MSG                    1203
 #define IDC_COMBO1                      1206
 #define IDC_EDIT_PHONENUM               1208
+#define IDC_BUTTON_NUM2                 1210
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -422,9 +435,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        188
+#define _APS_NEXT_RESOURCE_VALUE        189
 #define _APS_NEXT_COMMAND_VALUE         32833
-#define _APS_NEXT_CONTROL_VALUE         1209
+#define _APS_NEXT_CONTROL_VALUE         1211
 #define _APS_NEXT_SYMED_VALUE           117
 #endif
 #endif

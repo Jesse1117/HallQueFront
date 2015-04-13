@@ -337,6 +337,7 @@ void CCallThread::OnCall(CallerCmd& callerCmd)
 		}
 		//playsound,ÏÔÊ¾
 		theApp.m_Controller.m_pPlaySound->DataPlay(data);
+		
 
 		//·¢¶ÌÐÅ
  		if (!data.GetPhoneNum().IsEmpty())

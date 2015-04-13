@@ -76,6 +76,7 @@ BEGIN_MESSAGE_MAP(CHallQueFrontView, CView)
 	ON_COMMAND(ID_STBSET, &CHallQueFrontView::OnStbset)
 	ON_MESSAGE(WM_SHOWMSG,&CHallQueFrontView::OnMyShowMessage)
 	ON_MESSAGE(WM_SHOWPAGE,&CHallQueFrontView::OnMyShowPage)
+	ON_MESSAGE(WM_SHOWFIRSTPAGE,&CHallQueFrontView::OnMyShowFirstPage)
 	ON_COMMAND(ID_VIEWMINSIZE, &CHallQueFrontView::OnViewminsize)
 	ON_COMMAND(ID_LEADINWAV, &CHallQueFrontView::OnLeadinwav)
 	ON_COMMAND(ID_HIDEMAIN, &CHallQueFrontView::OnHidemain)
@@ -1041,7 +1042,8 @@ void CHallQueFrontView::OnButtonClick(UINT uID)
 				if(!theApp.m_Controller.JudgeWorkTimeOut(strAddress))
 				{
 					m_Mlock.Lock();
-					m_list_address.AddTail(strAddress);
+					m_cardinfo.strAttchQueID = strAddress;
+					m_list_address.AddTail(m_cardinfo);
 					m_Mlock.Unlock();
 				}
 			}
@@ -1088,17 +1090,17 @@ BOOL CHallQueFrontView::HasData()
 	return !m_list_address.IsEmpty();
 }
 
-CString CHallQueFrontView::GetData()
+CARDINFO CHallQueFrontView::GetData()
 {
 	m_Mlock.Lock();
-	CString address;
+	CARDINFO cardinfo;
 	if(HasData())
 	{
-		address = m_list_address.GetHead();
+		cardinfo= m_list_address.GetHead();
 		m_list_address.RemoveHead();
 	}
 	m_Mlock.Unlock();
-	return address;
+	return cardinfo;
 }
 
 
@@ -1473,16 +1475,28 @@ void CHallQueFrontView::ShowPage(int nPageID)
 				break;
 			}
 		}
+
 //		theApp.m_Controller.InitShowInlineQueNum();//显示界面排队人数
 	}
 }
 
 LRESULT CHallQueFrontView::OnMyShowPage(WPARAM wParam,LPARAM lParam)
 {
+	/*UINT nPageID = (UINT)wParam;*/
+	CARDINFO* pcardinfo = (CARDINFO*)wParam;
+	m_cardinfo = *pcardinfo;
+	ShowPage(pcardinfo->nAttchPageID);
+	/*delete pcardinfo;*/
+	return 0;
+}
+
+LRESULT CHallQueFrontView::OnMyShowFirstPage(WPARAM wParam,LPARAM lParam)
+{
 	UINT nPageID = (UINT)wParam;
 	ShowPage(nPageID);
 	return 0;
 }
+
 void CHallQueFrontView::OnLeadinwav()
 {
 	// TODO: 在此添加命令处理程序代码
