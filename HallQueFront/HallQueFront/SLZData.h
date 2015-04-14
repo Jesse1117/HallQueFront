@@ -221,6 +221,14 @@ public:
 	{
 		m_strMsg = strMsg;
 	}
+
+	UINT GetWaitTime() const
+	{
+		return m_iWaitTime;
+	}
+
+	void SetWaitTime(const UINT iwaittime){m_iWaitTime = iwaittime;}
+
 	////设置开启评价
 	void SetIsOpenEva(const BOOL isOpen){m_bIsOpenEva = isOpen;}
 	BOOL GetIsOpenEva(){return m_bIsOpenEva;}
@@ -255,6 +263,7 @@ private:
 	UINT m_iQueNum;    //INT型排队号
 	CString m_strPhoneNum;   //要发送短信的电话号
 	CString m_strMsg; //发送短信的内容
+	UINT m_iWaitTime;  //延时时间
 private:
 	int GetSrand(const int &max);
 	CString GetOnlyId();//取号唯一ID

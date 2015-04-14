@@ -188,6 +188,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\CallerCmdData.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CallerInfo.cpp"
 				>
 			</File>
@@ -232,6 +236,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SoundPlay.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -266,6 +274,14 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\CallerCmd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CallerCmdData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CallerInfo.h"
 				>
 			</File>
@@ -294,6 +310,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HardWareDef.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ListBoxPlus.h"
 				>
 			</File>
@@ -315,6 +335,10 @@
 			</File>
 			<File
 				RelativePath=".\SLZData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundPlay.h"
 				>
 			</File>
 			<File

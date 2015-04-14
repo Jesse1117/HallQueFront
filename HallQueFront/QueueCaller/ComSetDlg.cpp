@@ -9,6 +9,8 @@
 #include "ShowMsgSetDlg.h"
 #include "CommonStrMethod.h"
 #include "TcpSever.h"
+#include "SoundPlay.h"
+
 // CComSetDlg 对话框
 
 IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
@@ -16,6 +18,8 @@ IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
 CComSetDlg::CComSetDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CComSetDlg::IDD, pParent)
 {
+	m_pPlaySound = CSoundPlay::GetInstance();
+	//m_pComInOut = CDoComInOut::GetInstance();
 	m_pSever = new CTcpSever();
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_MAINFRAME);
 	m_strCallPath = CommonStrMethod::GetModuleDir();
@@ -38,6 +42,7 @@ void CComSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX,IDC_EDIT_WAITTIME,m_strWatiTime);
 	DDX_Text(pDX,IDC_EDIT_PLAYTIME,m_strPlayTimes);
 	DDX_Text(pDX,IDC_EDIT_SELFPORT,m_strSelfPort);
+	DDX_Text(pDX,IDC_EDIT_COM,m_strCom);
 }
 
 
@@ -66,6 +71,8 @@ BOOL CComSetDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 	AddTrayIcon();
 	m_pSever->Start();
+	m_pPlaySound->Init();
+	//m_pComInOut->Start();
 	SetTimer(11,10,NULL);
 	return TRUE;
 }
@@ -85,6 +92,10 @@ void CComSetDlg::LoadInfo()
 	GetPrivateProfileString(_T("CompSet"),_T("WndId"),NULL,wbuf,255,m_strCallPath);
 	CString strWndId(wbuf);
 	m_strWndId = strWndId;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("Com"),NULL,wbuf,255,m_strCallPath);
+	CString strCom(wbuf);
+	m_strCom = strCom;
 	ZeroMemory(wbuf,255);
 	GetPrivateProfileString(_T("CompSet"),_T("CallName"),NULL,wbuf,255,m_strCallPath);
 	CString strCallName(wbuf);
@@ -117,6 +128,7 @@ void CComSetDlg::OnBnClickedOk()
 	WritePrivateProfileString(_T("CompSet"),_T("Port"),m_strPort,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("SelfPort"),m_strSelfPort,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("WndId"),m_strWndId,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("Com"),m_strCom,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("CallName"),m_strCallName,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("WaitTime"),m_strWatiTime,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("PlayTimes"),m_strPlayTimes,m_strCallPath);

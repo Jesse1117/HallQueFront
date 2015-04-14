@@ -4,6 +4,8 @@
 // CComSetDlg ¶Ô»°¿ò
 #define WM_MY_TRAYICON (WM_USER+100)
 class CTcpSever;
+class CSoundPlay;
+//class CDoComInOut;
 class CComSetDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CComSetDlg)
@@ -30,6 +32,7 @@ public:
 	CString m_strPort;
 	CString m_strWndId;
 	UINT m_iWndId;
+	CString m_strCom;
 	CString m_strCallName;
 	UINT m_iWaitTime;
 	CString m_strWatiTime;
@@ -47,6 +50,8 @@ private:
 	void RemoveTrayIcon();
 	void LoadInfo();
 	CTcpSever* m_pSever;
+	CSoundPlay* m_pPlaySound;
+	//CDoComInOut* m_pComInOut;
 public:
 	afx_msg void OnCallset();
 	afx_msg void OnShowset();

@@ -66,7 +66,7 @@ BOOL SoundPlay::Init()
 		return FALSE;
 	}
 	//
-	
+	GetReplayTimes();
 	CFileFind finder;
 	BOOL bFound = finder.FindFile(CommonStrMethod::GetModuleDir() + _T("wavLib\\*.wav"));
 	while(bFound)
@@ -642,17 +642,19 @@ UINT SoundPlay::PlayVoiceThread(LPVOID pParam)
 //////////////////////…˘“Ù≤•∑≈//////////////////////////
 			if (!PlayStr.strVoiceStr.IsEmpty())
 			{
-				if (theApp.m_logicVariables.IsUseJtts)
+				for (int i=0;i<pThis->m_iSoundReplayTimes;i++)
 				{
+					if (theApp.m_logicVariables.IsUseJtts)
+					{
 						CStringArray soundarray;
 						CommonStrMethod::StrSplit(PlayStr.strVoiceStr,soundarray,_T("#"));
 						for (int i=0;i< soundarray.GetCount();i++)
 						{
 							pThis->PlayJtts(soundarray.GetAt(i));
 						}
-				}
-				else
-				{
+					}
+					else
+					{
 						CStringArray soundarray;
 						CommonStrMethod::StrSplit(PlayStr.strVoiceStr,soundarray,_T("#"));
 						for (int j=0;j<soundarray.GetCount();j++)
@@ -660,7 +662,9 @@ UINT SoundPlay::PlayVoiceThread(LPVOID pParam)
 							CString strjts = soundarray.GetAt(j);
 							pThis->PlayTheVoice(strjts,pThis->m_WavList);
 						}
+					}
 				}
+
 			}
 		}
 		//pThis->m_mtThreadPlayVoice.Unlock();
