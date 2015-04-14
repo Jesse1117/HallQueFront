@@ -236,6 +236,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SoundPlay.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -306,6 +310,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HardWareDef.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ListBoxPlus.h"
 				>
 			</File>
@@ -327,6 +335,10 @@
 			</File>
 			<File
 				RelativePath=".\SLZData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundPlay.h"
 				>
 			</File>
 			<File

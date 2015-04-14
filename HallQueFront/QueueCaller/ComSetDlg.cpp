@@ -9,6 +9,8 @@
 #include "ShowMsgSetDlg.h"
 #include "CommonStrMethod.h"
 #include "TcpSever.h"
+#include "SoundPlay.h"
+
 // CComSetDlg 对话框
 
 IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
@@ -16,6 +18,8 @@ IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
 CComSetDlg::CComSetDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CComSetDlg::IDD, pParent)
 {
+	m_pPlaySound = CSoundPlay::GetInstance();
+	//m_pComInOut = CDoComInOut::GetInstance();
 	m_pSever = new CTcpSever();
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_MAINFRAME);
 	m_strCallPath = CommonStrMethod::GetModuleDir();
@@ -67,6 +71,8 @@ BOOL CComSetDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 	AddTrayIcon();
 	m_pSever->Start();
+	m_pPlaySound->Init();
+	//m_pComInOut->Start();
 	SetTimer(11,10,NULL);
 	return TRUE;
 }

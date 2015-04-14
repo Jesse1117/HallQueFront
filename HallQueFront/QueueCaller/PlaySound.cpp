@@ -1,27 +1,26 @@
 #include "stdafx.h"
 #include "PlaySound.h"
-#include "HallQueFront.h"
+//#include "HallQueFront.h"
 #include "CommonStrMethod.h"
 #include "SLZCWndScreen.h"
 #include "DataDef.h"
 #include "CommonConvert.h"
 #include <Mmsystem.h>
 #include <Shlwapi.h>
-#include "SLZWindow.h"
+
 
 #pragma comment(lib, "WINMM.LIB")
 extern void MyWriteConsole(CString str); 
 SoundPlay* playsound;
-SoundPlay::SoundPlay(SLZWindowQueryView& windowTable)
+SoundPlay::SoundPlay()
 :m_iSoundReplayTimes(1)
 ,m_pPlayVoiceThread(NULL)
-,m_windowTable(windowTable)
 ,iSpeed(5)
 {
 	SetTimer(NULL,0,1000,MyDoOutTimerMsg);
 	playsound = this;//SoundPlay::GetInstance(windowTable);
 	m_strWavLibPath = CommonStrMethod::GetModuleDir() + _T("wavLib\\");
-	m_WindowPath = CommonStrMethod::GetModuleDir() + _T("Window.dat");
+	//m_WindowPath = CommonStrMethod::GetModuleDir() + _T("Window.dat");
 	if (Init())
 	{
 		ShowAdven();				//开机显示广告
@@ -40,22 +39,22 @@ SoundPlay::~SoundPlay()
 	//jTTS_End();
 }
 
-SoundPlay* SoundPlay::GetInstance(SLZWindowQueryView& windowTable)
+SoundPlay* SoundPlay::GetInstance()
 {
-	static SoundPlay Instance(windowTable);
+	static SoundPlay Instance;
 	return &Instance;
 }
 
 BOOL SoundPlay::Init()
 {
 	WriteReg();
-	ERRCODE err;
-	err = jTTS_Init(NULL,NULL);
-	if (err != ERR_NONE && err != ERR_ALREADYINIT)
-	{
-		AfxMessageBox(_T("jTTS语音初始化出错"));
-		return FALSE; // 初始化失败
-	}
+	//ERRCODE err;
+	//err = jTTS_Init(NULL,NULL);
+	//if (err != ERR_NONE && err != ERR_ALREADYINIT)
+	//{
+	//	AfxMessageBox(_T("jTTS语音初始化出错"));
+	//	return FALSE; // 初始化失败
+	//}
 	BOOL bRet = ::PathFileExists(m_strWavLibPath);
 	if (!bRet)
 	{
@@ -80,41 +79,41 @@ BOOL SoundPlay::Init()
 	return TRUE;
 }
 
-BOOL SoundPlay::ShowAdven()
-{
-	if (ReadWindowInfo())			//读窗口信息
-	{
-		std::list<SLZWindow>::iterator itera = m_list_WindowInfo.begin();
-		for (itera;itera!=m_list_WindowInfo.end();itera++)
-		{
-			CString strAdmsg = itera->GetAdMsg();
-			if (!strAdmsg.IsEmpty())
-			{
-				int wndaddress = itera->GetWndScreenId();
-				if (wndaddress!=0)
-				{
-					SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
-					WndScreen->AddScreenMsg(strAdmsg,wndaddress);
-				}
-				int ledphyid = itera->GetLEDPhyId();
-				int ledpipeid = itera->GetLEDPipeId();
-				if (ledphyid!=0&&ledpipeid!=0)
-				{
-					SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
-					WndScreen->AddThroughScreenMsg(strAdmsg,ledphyid,ledpipeid);
-				}
-				int wndcomid = itera->GetComScreenId();
-				if (wndcomid!=0)
-				{
-					SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
-					WndScreen->AddScreenMsg(strAdmsg,wndcomid);
-				}
-			}
-		}
-	}
-	else return FALSE;
-	return TRUE;
-}
+//BOOL SoundPlay::ShowAdven()
+//{
+//	if (ReadWindowInfo())			//读窗口信息
+//	{
+//		std::list<SLZWindow>::iterator itera = m_list_WindowInfo.begin();
+//		for (itera;itera!=m_list_WindowInfo.end();itera++)
+//		{
+//			CString strAdmsg = itera->GetAdMsg();
+//			if (!strAdmsg.IsEmpty())
+//			{
+//				int wndaddress = itera->GetWndScreenId();
+//				if (wndaddress!=0)
+//				{
+//					SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
+//					WndScreen->AddScreenMsg(strAdmsg,wndaddress);
+//				}
+//				int ledphyid = itera->GetLEDPhyId();
+//				int ledpipeid = itera->GetLEDPipeId();
+//				if (ledphyid!=0&&ledpipeid!=0)
+//				{
+//					SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
+//					WndScreen->AddThroughScreenMsg(strAdmsg,ledphyid,ledpipeid);
+//				}
+//				int wndcomid = itera->GetComScreenId();
+//				if (wndcomid!=0)
+//				{
+//					SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
+//					WndScreen->AddScreenMsg(strAdmsg,wndcomid);
+//				}
+//			}
+//		}
+//	}
+//	else return FALSE;
+//	return TRUE;
+//}
 
 BOOL SoundPlay::ReadWindowInfo()
 {
@@ -191,11 +190,11 @@ BOOL SoundPlay::DataPlay(const CString strPlay)
 	else return FALSE;
 }
 
-CString SoundPlay::ChangeCallStr(const SLZData& data,SLZWindow* WindowInfo)
+CString SoundPlay::ChangeCallStr(const SLZData& data)
 {
-	CString strPlaySound = WindowInfo->GetCallMsg();
+	CString strPlaySound;
 	CString strQueNum = data.GetQueueNumber();
-	CString strCallName = WindowInfo->GetWindowCallName();
+	CString strCallName;
 	CString strBussName = data.GetBussName();
 	if (theApp.m_logicVariables.IsUseJtts)						/////使用JTTS语音库
 	{
@@ -301,14 +300,14 @@ CString SoundPlay::ChangeCallStr(const SLZData& data,SLZWindow* WindowInfo)
 	return strPlaySound;
 }
 
-CString SoundPlay::ChangeShowStr(const SLZData& data,SLZWindow* WindowInfo)
+CString SoundPlay::ChangeShowStr(const SLZData& data)
 {
-	CString strPlaySound = WindowInfo->GetShowMsg();
+	CString strPlaySound;
 	strPlaySound.Replace(_T("[排队号码]"),data.GetQueueNumber());
 	strPlaySound.Replace(_T("[客户姓名]"),data.GetCustName());
 	strPlaySound.Replace(_T("[窗口名称]"),WindowInfo->GetWindowName());
 	strPlaySound.Replace(_T("[业务名称]"),data.GetBussName());
-	CString strwndname = WindowInfo->GetWindowName();
+	CString strwndname;
 	strwndname.Remove(_T('号'));
 	strwndname.Remove(_T('窗'));
 	strwndname.Remove(_T('口'));
@@ -317,11 +316,11 @@ CString SoundPlay::ChangeShowStr(const SLZData& data,SLZWindow* WindowInfo)
 	return strPlaySound;
 }
 
-CString SoundPlay::ChangeWaitCallStr(const SLZData& data,SLZWindow* WindowInfo)
+CString SoundPlay::ChangeWaitCallStr(const SLZData& data)
 {
-	CString strPlaySound = WindowInfo->GetWaitCallMsg();
+	CString strPlaySound;
 	CString strQueNum = data.GetQueueNumber();
-	CString strCallName = WindowInfo->GetWindowCallName();
+	CString strCallName;
 	CString strBussName = data.GetBussName();
 	if (theApp.m_logicVariables.IsUseJtts)						/////使用JTTS语音库
 	{
@@ -424,14 +423,14 @@ CString SoundPlay::ChangeWaitCallStr(const SLZData& data,SLZWindow* WindowInfo)
 	return strPlaySound;
 }
 
-CString SoundPlay::ChangeWaitShowStr(const SLZData& data,SLZWindow* WindowInfo)
+CString SoundPlay::ChangeWaitShowStr(const SLZData& data)
 {
-	CString strPlaySound = WindowInfo->GetWaitShowMsg();
+	CString strPlaySound;
 	strPlaySound.Replace(_T("[排队号码]"),data.GetQueueNumber());
 	strPlaySound.Replace(_T("[客户姓名]"),data.GetCustName());
 	strPlaySound.Replace(_T("[窗口名称]"),WindowInfo->GetWindowName());
 	strPlaySound.Replace(_T("[业务名称]"),data.GetBussName());
-	CString strwndname = WindowInfo->GetWindowName();
+	CString strwndname;
 	strwndname.Remove(_T('号'));
 	strwndname.Remove(_T('窗'));
 	strwndname.Remove(_T('口'));
