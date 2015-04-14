@@ -13,6 +13,7 @@ public:
 	~CDealData(void);
 	void AddData(SLZData& data);  // 加入排队队列
 	BOOL HasData();   //判断完成队列是否有数据
+	BOOL Start();
 private:
 	CList<SLZData,SLZData&> m_DataList;   //排队队列
 	CList<SLZData,SLZData&> m_DoneList;   //完成队列

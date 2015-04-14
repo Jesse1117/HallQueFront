@@ -38,6 +38,7 @@ void CComSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX,IDC_EDIT_WAITTIME,m_strWatiTime);
 	DDX_Text(pDX,IDC_EDIT_PLAYTIME,m_strPlayTimes);
 	DDX_Text(pDX,IDC_EDIT_SELFPORT,m_strSelfPort);
+	DDX_Text(pDX,IDC_EDIT_COM,m_strCom);
 }
 
 
@@ -86,6 +87,10 @@ void CComSetDlg::LoadInfo()
 	CString strWndId(wbuf);
 	m_strWndId = strWndId;
 	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("Com"),NULL,wbuf,255,m_strCallPath);
+	CString strCom(wbuf);
+	m_strCom = strCom;
+	ZeroMemory(wbuf,255);
 	GetPrivateProfileString(_T("CompSet"),_T("CallName"),NULL,wbuf,255,m_strCallPath);
 	CString strCallName(wbuf);
 	m_strCallName = strCallName;
@@ -117,6 +122,7 @@ void CComSetDlg::OnBnClickedOk()
 	WritePrivateProfileString(_T("CompSet"),_T("Port"),m_strPort,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("SelfPort"),m_strSelfPort,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("WndId"),m_strWndId,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("Com"),m_strCom,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("CallName"),m_strCallName,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("WaitTime"),m_strWatiTime,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("PlayTimes"),m_strPlayTimes,m_strCallPath);

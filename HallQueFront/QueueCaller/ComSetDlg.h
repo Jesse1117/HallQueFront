@@ -30,6 +30,7 @@ public:
 	CString m_strPort;
 	CString m_strWndId;
 	UINT m_iWndId;
+	CString m_strCom;
 	CString m_strCallName;
 	UINT m_iWaitTime;
 	CString m_strWatiTime;
