@@ -1,6 +1,11 @@
 #ifndef _QUEUECALLER_DATADEF_H
 #define _QUEUECALLER_DATADEF_H
 
+#define CALL_MSG WM_USER+1117
+
+#define MYBUFLEN 256
+#define DATABUFLEN 1024
+
 typedef enum _tagCmdType
 {
 	cmdNotDefined		= 0,		//未定义
@@ -33,6 +38,15 @@ struct UserInfo{
 	BOOL isRemember;
 };
 
+typedef enum _tagEvaLevel
+{
+	evaNone			= -1,		//未评价
+	evaBad				= 0,		//不满意
+	evaNormal		= 1,		//一般
+	evaGood			= 2,		//满意
+	evaPefect			= 3		//非常满意
+} EvaLevel;
+
 typedef struct _tagComInfo{
 	CString strIP;
 	CString strPort;	
@@ -48,6 +62,19 @@ typedef struct _tagShowInfomation
 	CString strShowMsg;
 	UINT iShowTime;
 }ShowInfo,*pShowInfo;
+
+
+///写串口数据
+typedef struct _tagWriteComMsg
+{
+public:
+	_tagWriteComMsg(){
+		memset(buf,0,DATABUFLEN);
+		length = 0;
+	}
+	int length;
+	char buf[DATABUFLEN];
+}WriteComMsg;
 
 #define COLORCODE_RED				(_T("#0#"))			//红色
 #define COLORCODE_GREEN				(_T("#1#"))			//绿色

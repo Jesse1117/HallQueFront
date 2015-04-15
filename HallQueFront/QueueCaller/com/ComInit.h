@@ -21,7 +21,7 @@ public:
 	//保存到文件
 	void SaveComm();
 	//读文件
-	//CString GetCardComm();
+	CString GetCardComm();
 	CString GetWndComm();
 	CString GetMsgComm();
 	void SetMsgComm(const CString strCom)
