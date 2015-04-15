@@ -48,6 +48,9 @@ public:
 	CComboBox m_combo_MsgCom;
 	CComboBox m_combo_WndCom;
 	CString m_strShortMsg;
+
+	CString m_strCallerAdd1;
+	CString m_strCallerAdd2;
 private:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnClose();

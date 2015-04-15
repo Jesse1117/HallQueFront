@@ -43,8 +43,10 @@
 #define IDC_CHECK_SENDMSG               1027
 #define IDC_EDIT_SENDMSG                1029
 #define IDC_COMBO_WNDCOM                1030
-#define IDC_COMBO2                      1031
 #define IDC_COMBO_MSGCOM                1031
+#define IDC_EDIT_CALLADD1               1032
+#define IDC_EDIT3                       1033
+#define IDC_EDIT_CALLADD2               1033
 #define IDC_BUTTON_QUENUM               1074
 #define IDC_BTN_ADDTEXT                 1074
 #define IDC_BUTTON_WNDNAME              1075
@@ -91,7 +93,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32781
-#define _APS_NEXT_CONTROL_VALUE         1032
+#define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -51,6 +51,8 @@ void CComSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX,IDC_EDIT_SENDMSG,m_strShortMsg);
 	DDX_Control(pDX,IDC_COMBO_WNDCOM,m_combo_WndCom);
 	DDX_Control(pDX,IDC_COMBO_MSGCOM,m_combo_MsgCom);
+	DDX_Text(pDX,IDC_EDIT_CALLADD1,m_strCallerAdd1);
+	DDX_Text(pDX,IDC_EDIT_CALLADD2,m_strCallerAdd2);
 }
 
 
@@ -203,6 +205,14 @@ void CComSetDlg::LoadInfo()
 	GetPrivateProfileString(_T("CompSet"),_T("ShortMsg"),NULL,wbuf,255,m_strCallPath);
 	CString strShortMsg(wbuf);
 	m_strShortMsg = strShortMsg;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("CallerAdd1"),NULL,wbuf,255,m_strCallPath);
+	CString strCallerAdd1(wbuf);
+	m_strCallerAdd1 = strCallerAdd1;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("CallerAdd2"),NULL,wbuf,255,m_strCallPath);
+	CString strCallerAdd2(wbuf);
+	m_strCallerAdd2 = strCallerAdd2;
 	UpdateData(FALSE);
 }
 
@@ -233,6 +243,8 @@ void CComSetDlg::OnBnClickedOk()
 	}
 	WritePrivateProfileString(_T("CompSet"),_T("MsgCom"),m_strMsgCom,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("ShortMsg"),m_strShortMsg,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("CallerAdd1"),m_strCallerAdd1,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("CallerAdd2"),m_strCallerAdd2,m_strCallPath);
 	ShowWindow(SW_HIDE);
 }
 

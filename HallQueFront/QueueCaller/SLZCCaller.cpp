@@ -2,13 +2,13 @@
 //
 
 #include "stdafx.h"
-#include "HallQueFront.h"
+//#include "HallQueFront.h"
 #include "SLZCCaller.h"
 #include "HardWareDef.h"
-#include "SLZCEvaluator.h"
-#include "DoComInOut.h"
+//#include "SLZCEvaluator.h"
+//#include "DoComInOut.h"
 #include "DataDef.h"
-
+#include "CommonConvert.h"
 //SLZCCaller* SLZCCaller::m_pInstance=NULL;//new SLZCCaller;
 // SLZCCaller
 extern void MyWriteConsole(CString str); 
@@ -146,15 +146,15 @@ void SLZCCaller::DoCallerMsg(char *buf,int size)
 		
 		//开启评价超时
 		//m_hardEvaltor.StartEvaltor(buf);
-		if(size == 10)
-		{
-			SLZCEvaluator::GetInstance()->StartEvaltor(buf);
-			callerData.SetCmdType(cmdEvaReq);
-		}
-		if(size == 11 && buf[size-4] == 0x00)//等候0+等候
-		{
-			callerData.SetCmdType(cmdWait);
-		}
+		//if(size == 10)
+		//{
+		//	SLZCEvaluator::GetInstance()->StartEvaltor(buf);
+		//	callerData.SetCmdType(cmdEvaReq);
+		//}
+		//if(size == 11 && buf[size-4] == 0x00)//等候0+等候
+		//{
+		//	callerData.SetCmdType(cmdWait);
+		//}
 	}
 	if(buf[size-3]==HARDWARE_CALLER_RECALL && size==10)
 	{

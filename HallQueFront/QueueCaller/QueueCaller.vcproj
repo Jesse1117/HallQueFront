@@ -358,6 +358,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SLZCallerData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SLZData.h"
 				>
 			</File>
