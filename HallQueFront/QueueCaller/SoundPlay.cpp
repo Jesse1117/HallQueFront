@@ -324,7 +324,7 @@ CString CSoundPlay::ChangeWaitCallStr(const SLZData& data)
 			strPlaySound.Replace(_T("[排队号码]"),strQueNum);
 			for (int i=0;i<strArr.GetCount();i++)
 			{
-				CString strOrigin = strArr.GetAt(i);
+				CString strOrigin = strArr.GetAt(i);   
 				if (StrHasNum(strOrigin))							/////////只转换呼叫名称中的数字
 				{
 					InsertSplit(strOrigin,L"#");

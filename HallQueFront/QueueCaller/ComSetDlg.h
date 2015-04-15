@@ -5,6 +5,8 @@
 #define WM_MY_TRAYICON (WM_USER+100)
 class CTcpSever;
 class CSoundPlay;
+class CComInit;
+class CShortMsgModem;
 //class CDoComInOut;
 class CComSetDlg : public CDialog
 {
@@ -40,6 +42,12 @@ public:
 	CString m_strPlayTimes;
 	CString m_strCallPath;
 	CString m_strSelfPort;
+
+	CButton m_Check_SendMsg;
+	CString m_strMsgCom;
+	CComboBox m_combo_MsgCom;
+	CComboBox m_combo_WndCom;
+	CString m_strShortMsg;
 private:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnClose();
@@ -52,9 +60,14 @@ private:
 	CTcpSever* m_pSever;
 	CSoundPlay* m_pPlaySound;
 	//CDoComInOut* m_pComInOut;
+
+	CComInit* m_pComInit;
+	CShortMsgModem* m_pShortMsg;
 public:
 	afx_msg void OnCallset();
 	afx_msg void OnShowset();
 	afx_msg void OnComset();
 	afx_msg void OnQuit();
+	afx_msg void OnCbnSelchangeComboMsgcom();
+	afx_msg void OnCbnSelchangeComboWndcom();
 };
