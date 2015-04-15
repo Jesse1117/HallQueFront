@@ -10,7 +10,8 @@
 #include "CommonStrMethod.h"
 #include "TcpSever.h"
 #include "SoundPlay.h"
-
+#include "ComInit.h"
+#include "ShortMsgModem.h"
 // CComSetDlg 对话框
 
 IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
@@ -26,6 +27,8 @@ CComSetDlg::CComSetDlg(CWnd* pParent /*=NULL*/)
 	m_strCallPath+=_T("\\config");
 	CommonStrMethod::CreatePath(m_strCallPath);
 	m_strCallPath+=_T("\\CallerSet.ini");
+	m_pShortMsg = CShortMsgModem::GetInstance();
+	m_pComInit = CComInit::GetInstance();
 }
 
 CComSetDlg::~CComSetDlg()
@@ -42,7 +45,12 @@ void CComSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX,IDC_EDIT_WAITTIME,m_strWatiTime);
 	DDX_Text(pDX,IDC_EDIT_PLAYTIME,m_strPlayTimes);
 	DDX_Text(pDX,IDC_EDIT_SELFPORT,m_strSelfPort);
-	DDX_Text(pDX,IDC_EDIT_COM,m_strCom);
+	DDX_Text(pDX,IDC_COMBO_WNDCOM,m_strCom);
+	DDX_Text(pDX,IDC_COMBO_MSGCOM,m_strMsgCom);
+	DDX_Control(pDX,IDC_CHECK_SENDMSG,m_Check_SendMsg);
+	DDX_Text(pDX,IDC_EDIT_SENDMSG,m_strShortMsg);
+	DDX_Control(pDX,IDC_COMBO_WNDCOM,m_combo_WndCom);
+	DDX_Control(pDX,IDC_COMBO_MSGCOM,m_combo_MsgCom);
 }
 
 
@@ -58,6 +66,8 @@ BEGIN_MESSAGE_MAP(CComSetDlg, CDialog)
 	ON_COMMAND(ID_SHOWSET, &CComSetDlg::OnShowset)
 	ON_COMMAND(ID_COMSET, &CComSetDlg::OnComset)
 	ON_COMMAND(ID_QUIT, &CComSetDlg::OnQuit)
+	ON_CBN_SELCHANGE(IDC_COMBO_MSGCOM, &CComSetDlg::OnCbnSelchangeComboMsgcom)
+	ON_CBN_SELCHANGE(IDC_COMBO_WNDCOM, &CComSetDlg::OnCbnSelchangeComboWndcom)
 END_MESSAGE_MAP()
 
 
@@ -79,6 +89,67 @@ BOOL CComSetDlg::OnInitDialog()
 
 void CComSetDlg::LoadInfo()
 {
+	CCommonConvert convert;
+	CString callerCom = m_pComInit->GetWndComm();
+	CString MsgCom = m_pComInit->GetMsgComm();
+	int i_wndsScreenCom=0;
+	convert.CStringToint(i_wndsScreenCom,callerCom);
+	if(m_pComInit->OpenWndScreen(i_wndsScreenCom) == -1)
+	{
+		m_combo_WndCom.SetCurSel(0);		
+		MessageBox(_T("呼叫器串口打开失败或被占用"),_T("注意"),MB_OK|MB_ICONINFORMATION);
+	}
+
+	int i_MsgCom=0;
+	convert.CStringToint(i_MsgCom,MsgCom);
+	m_pShortMsg->CloseMsgComm();
+	if (i_MsgCom!=0)
+	{
+		if(!m_pShortMsg->OpenMsgComm(i_MsgCom))
+		{
+			MessageBox(_T("短信猫串口打开失败或被占用"),_T("注意"),MB_OK|MB_ICONINFORMATION);
+			m_combo_MsgCom.SetCurSel(0);
+		}
+		else 
+		{
+			CString strCom;
+			CCommonConvert::intToCString(i_MsgCom,strCom);
+			m_pComInit->SetMsgComm(strCom);
+		}
+	}
+	m_combo_WndCom.AddString(_T("0"));
+	m_combo_MsgCom.AddString(_T("0"));
+	for(int i=0;i<10;i++)
+	{
+		if(m_pComInit->m_canUse[i]>0)
+		{
+			CString comm;
+			comm.Format(_T("%d"),m_pComInit->m_canUse[i]);
+			m_combo_WndCom.AddString(comm);
+			m_combo_MsgCom.AddString(comm);
+		}
+	}
+	for(int i=0;i<m_combo_WndCom.GetCount();i++)
+	{
+		CString content;
+		m_combo_WndCom.GetLBText(i,content);
+		if(callerCom == content)
+		{
+			m_combo_WndCom.SetCurSel(i);
+			break;
+		}
+	}
+
+	for(int i=0;i<m_combo_MsgCom.GetCount();i++)
+	{
+		CString content;
+		m_combo_MsgCom.GetLBText(i,content);
+		if(MsgCom == content)
+		{
+			m_combo_MsgCom.SetCurSel(i);
+			break;
+		}
+	}
 	wchar_t wbuf[255];
 	ZeroMemory(wbuf,255);
 	GetPrivateProfileString(_T("CompSet"),_T("IP"),NULL,wbuf,255,m_strCallPath);
@@ -92,10 +163,10 @@ void CComSetDlg::LoadInfo()
 	GetPrivateProfileString(_T("CompSet"),_T("WndId"),NULL,wbuf,255,m_strCallPath);
 	CString strWndId(wbuf);
 	m_strWndId = strWndId;
-	ZeroMemory(wbuf,255);
-	GetPrivateProfileString(_T("CompSet"),_T("Com"),NULL,wbuf,255,m_strCallPath);
+	/*ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("CallerCom"),NULL,wbuf,255,m_strCallPath);
 	CString strCom(wbuf);
-	m_strCom = strCom;
+	m_strCom = strCom;*/
 	ZeroMemory(wbuf,255);
 	GetPrivateProfileString(_T("CompSet"),_T("CallName"),NULL,wbuf,255,m_strCallPath);
 	CString strCallName(wbuf);
@@ -112,6 +183,26 @@ void CComSetDlg::LoadInfo()
 	GetPrivateProfileString(_T("CompSet"),_T("SelfPort"),NULL,wbuf,255,m_strCallPath);
 	CString strSelfPort(wbuf);
 	m_strSelfPort = strSelfPort;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("IfSendMsg"),NULL,wbuf,255,m_strCallPath);
+	CString strSendMsg(wbuf);
+	int bSendMsg = CommonStrMethod::Str2Int(strSendMsg);
+	if (bSendMsg)
+	{
+		m_Check_SendMsg.SetCheck(BST_CHECKED);
+	}
+	else
+	{
+		m_Check_SendMsg.SetCheck(BST_UNCHECKED);
+	}
+	/*ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("MsgCom"),NULL,wbuf,255,m_strCallPath);
+	CString strMsgCom(wbuf);
+	m_strMsgCom = strMsgCom;*/
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("ShortMsg"),NULL,wbuf,255,m_strCallPath);
+	CString strShortMsg(wbuf);
+	m_strShortMsg = strShortMsg;
 	UpdateData(FALSE);
 }
 
@@ -128,10 +219,20 @@ void CComSetDlg::OnBnClickedOk()
 	WritePrivateProfileString(_T("CompSet"),_T("Port"),m_strPort,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("SelfPort"),m_strSelfPort,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("WndId"),m_strWndId,m_strCallPath);
-	WritePrivateProfileString(_T("CompSet"),_T("Com"),m_strCom,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("CallerCom"),m_strCom,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("CallName"),m_strCallName,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("WaitTime"),m_strWatiTime,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("PlayTimes"),m_strPlayTimes,m_strCallPath);
+	if (m_Check_SendMsg.GetCheck()==BST_CHECKED)
+	{
+		WritePrivateProfileString(_T("CompSet"),_T("IfSendMsg"),_T("1"),m_strCallPath);
+	}
+	else
+	{
+		WritePrivateProfileString(_T("CompSet"),_T("IfSendMsg"),_T("0"),m_strCallPath);
+	}
+	WritePrivateProfileString(_T("CompSet"),_T("MsgCom"),m_strMsgCom,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("ShortMsg"),m_strShortMsg,m_strCallPath);
 	ShowWindow(SW_HIDE);
 }
 
@@ -280,5 +381,57 @@ void CComSetDlg::OnQuit()
 	{
 		RemoveTrayIcon();
 		DestroyWindow();
+	}
+}
+
+void CComSetDlg::OnCbnSelchangeComboMsgcom()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CCommonConvert convert;
+	int index=m_combo_MsgCom.GetCurSel();
+	if(index == CB_ERR)
+	{
+		return;
+	}
+	CString MsgCom=_T("");
+	m_combo_MsgCom.GetLBText(index,MsgCom);
+	int i_MsgCom=0;
+	convert.CStringToint(i_MsgCom,MsgCom);
+	m_pShortMsg->CloseMsgComm();
+	if (i_MsgCom!=0)
+	{
+		if(!m_pShortMsg->OpenMsgComm(i_MsgCom))
+		{
+			MessageBox(_T("短信猫串口打开失败或被占用"),_T("注意"),MB_OK|MB_ICONINFORMATION);
+			m_combo_MsgCom.SetCurSel(0);
+		}
+		else 
+		{
+			CString strCom;
+			CCommonConvert::intToCString(i_MsgCom,strCom);
+			m_pComInit->SetMsgComm(strCom);
+		}
+	}
+	else m_pComInit->SetMsgComm(L"0");
+}
+
+void CComSetDlg::OnCbnSelchangeComboWndcom()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CCommonConvert convert;
+	int index=m_combo_WndCom.GetCurSel();
+	if(index == CB_ERR)
+	{
+		return;
+	}
+	CString wndScreenCom=_T("");
+	m_combo_WndCom.GetLBText(index,wndScreenCom);
+	int i_wndsScreenCom=0;
+	convert.CStringToint(i_wndsScreenCom,wndScreenCom);
+
+	if(m_pComInit->OpenWndScreen(i_wndsScreenCom) == -1)
+	{
+		m_combo_WndCom.SetCurSel(0);		
+		MessageBox(_T("呼叫器串口打开失败或被占用"),_T("注意"),MB_OK|MB_ICONINFORMATION);
 	}
 }

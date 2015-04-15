@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ComInit.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CommonConvert.cpp"
 				>
 			</File>
@@ -216,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DoFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ListBoxPlus.cpp"
 				>
 			</File>
@@ -225,6 +233,10 @@
 			</File>
 			<File
 				RelativePath=".\QueueCaller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ShortMsgModem.cpp"
 				>
 			</File>
 			<File
@@ -290,6 +302,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ComInit.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CommonConvert.h"
 				>
 			</File>
@@ -310,6 +326,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DoFile.h"
+				>
+			</File>
+			<File
 				RelativePath=".\HardWareDef.h"
 				>
 			</File>
@@ -327,6 +347,10 @@
 			</File>
 			<File
 				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ShortMsgModem.h"
 				>
 			</File>
 			<File
