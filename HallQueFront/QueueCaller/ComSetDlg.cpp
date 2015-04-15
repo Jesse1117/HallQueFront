@@ -10,7 +10,7 @@
 #include "CommonStrMethod.h"
 #include "TcpSever.h"
 #include "SoundPlay.h"
-#include "ComInit.h"
+#include "com/ComInit.h"
 #include "ShortMsgModem.h"
 // CComSetDlg ¶Ô»°¿ò
 

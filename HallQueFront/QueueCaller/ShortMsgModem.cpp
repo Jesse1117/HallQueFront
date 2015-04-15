@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "ShortMsgModem.h"
-#include "ComInit.h"
+#include "com/ComInit.h"
 #include "CommonConvert.h"
 #include "CommonStrMethod.h"
 CShortMsgModem::CShortMsgModem(void):m_ReadThread(NULL)

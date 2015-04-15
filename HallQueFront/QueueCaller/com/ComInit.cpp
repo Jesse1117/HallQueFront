@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "ComInit.h"
-#include "DoFile.h"
-#include  "CommonStrMethod.h"
+#include "../DoFile.h"
+
 CComInit::CComInit(void) :
 m_hComReadCard(INVALID_HANDLE_VALUE)
 ,m_hComWndScreen(INVALID_HANDLE_VALUE)
@@ -54,10 +54,9 @@ int CComInit::TryCom(int nCom)
 */
 void CComInit::InitCom()
 {
-	m_strPath = CommonStrMethod::GetModuleDir();
-	m_strPath+=_T("\\config");
-	CommonStrMethod::CreatePath(m_strPath);
-	m_strPath+=_T("\\CallerSet.ini");
+	CDoFile dofile;
+	m_strPath = dofile.GetExeFullFilePath();
+	m_strPath += _T("\\cominfo.ini");
 }
 /*
 打开串口
@@ -183,20 +182,21 @@ int CComInit::OpenCardComm(int ncom)
 */
 void CComInit::SaveComm()
 {
+	WritePrivateProfileString(_T("com"),_T("CARDCOM"),m_cCardComm,m_strPath);
 	WritePrivateProfileString(_T("com"),_T("WNDCOM"),m_cWndComm,m_strPath);
 	WritePrivateProfileString(_T("com"),_T("MSGCOM"),m_cMsgComm,m_strPath);
 }
 /*
 读取刷卡器COM口
 */
-//CString CComInit::GetCardComm()
-//{
-//	wchar_t wbuf[255];
-//	ZeroMemory(wbuf,255);
-//	GetPrivateProfileString(_T("com"),_T("CARDCOM"),NULL,wbuf,255,m_strPath);
-//	m_cCardComm.Format(_T("%s"),wbuf);
-//	return m_cCardComm;
-//}
+CString CComInit::GetCardComm()
+{
+	wchar_t wbuf[255];
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("com"),_T("CARDCOM"),NULL,wbuf,255,m_strPath);
+	m_cCardComm.Format(_T("%s"),wbuf);
+	return m_cCardComm;
+}
 /*
 获取呼叫器和屏串口
 */
@@ -204,7 +204,7 @@ CString CComInit::GetWndComm()
 {
 	wchar_t wbuf[255];
 	ZeroMemory(wbuf,255);
-	GetPrivateProfileString(_T("CompSet"),_T("CallerCom"),NULL,wbuf,255,m_strPath);
+	GetPrivateProfileString(_T("com"),_T("WNDCOM"),NULL,wbuf,255,m_strPath);
 	m_cWndComm.Format(_T("%s"),wbuf);
 	return m_cWndComm; 
 }
@@ -213,7 +213,7 @@ CString CComInit::GetMsgComm()
 {
 	wchar_t wbuf[255];
 	ZeroMemory(wbuf,255);
-	GetPrivateProfileString(_T("CompSet"),_T("MsgCom"),NULL,wbuf,255,m_strPath);
+	GetPrivateProfileString(_T("com"),_T("MSGCOM"),NULL,wbuf,255,m_strPath);
 	m_cMsgComm.Format(_T("%s"),wbuf);
 	return m_cMsgComm; 
 }
