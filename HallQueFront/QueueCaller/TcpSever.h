@@ -22,6 +22,9 @@ private:
 	SOCKET m_ListeningSocket;
 	CMutex m_ServerLock;
 	UINT m_uListenPort;
-
 	SLZData Dodata(std::string	buf);
+	void LoadConfig();
+	CString m_strIP;
+	CString m_strPort;
+	UINT m_iWaitTime;
 };

@@ -3,7 +3,7 @@
 #include "CommonStrMethod.h"
 #include <Mmsystem.h>
 #include <Shlwapi.h>
-
+#include "com/SLZCWndScreen.h"
 #pragma comment(lib, "WINMM.LIB")
 CSoundPlay::CSoundPlay(void):m_pPlayVoiceThread(NULL)
 {
@@ -134,10 +134,8 @@ UINT CSoundPlay::PlayVoiceThread(LPVOID pParam)
 				//showtime.strAd = PlayStr.strAd;
 				if (PlayStr.iWndScreenId!=0)
 				{
-					//SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
-					//WndScreen->AddScreenMsg(PlayStr.strDisplayStr,PlayStr.iWndScreenId);
-					//showtime.address = PlayStr.iWndScreenId;
-
+					SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
+					WndScreen->AddScreenMsg(PlayStr.strDisplayStr,PlayStr.iWndScreenId);
 				}
 				//if (PlayStr.iLEDPhyId!=0&&PlayStr.iLEDPipeId!=0)
 				//{

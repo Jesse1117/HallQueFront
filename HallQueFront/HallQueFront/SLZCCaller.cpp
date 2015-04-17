@@ -506,7 +506,7 @@ DWORD WINAPI SLZCCaller::WriteCallerThread(LPVOID pParam)
 // #endif
 			
 			WriteComMsg* pMsg = new WriteComMsg;
-			memset(pMsg->buf,0,textNum);
+			memset(pMsg->buf,0,DATABUFLEN);
 			memcpy(pMsg->buf,buf,length);
 			pMsg->length = length;
 			CDoComInOut* pDoComInOut = CDoComInOut::GetInstance();

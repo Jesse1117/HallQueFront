@@ -54,6 +54,7 @@ void CPropConnectInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RADIO_TYPE2, m_Sel_CallType2);
 	DDX_Control(pDX, IDC_CHECK4, m_check_changePage);
 	DDX_Control(pDX, IDC_COM_PARENTORG, m_combox_parentOrg);
+	DDX_Text(pDX,IDC_EDIT_WAITTIME,m_strWatiTime);
 }
 
 
@@ -279,6 +280,8 @@ BOOL CPropConnectInfo::OnInitDialog()
 		}
 		m_ed_organID.SetWindowText(m_logicVariables.strOrganID);
 		m_ed_organName.SetWindowText(m_logicVariables.strOrganNmae);
+		m_strWatiTime = CommonStrMethod::Int2Str(m_logicVariables.iWaitTime);
+		UpdateData(FALSE);
 	}
 	m_picImage.LoadFromResource(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDB_BITMAP_SET));
 	m_slider_speed.SetRange(1,10);
@@ -429,6 +432,8 @@ BOOL CPropConnectInfo::ReadSysLogicVaribiles()
 
 BOOL CPropConnectInfo::WriteSysLogicVaribiles()
 {
+	UpdateData();
+	m_logicVariables.iWaitTime = CommonStrMethod::Str2Int(m_strWatiTime);
 	if(BST_CHECKED == m_check_closeCmputer.GetCheck())
 	{
 		m_logicVariables.IsAutoCloseComputer=TRUE;

@@ -69,6 +69,7 @@ public:
 	CEdit m_ed_organName;
 	CEdit m_ed_organID;
 	CButton m_check_send;
+	CString m_strWatiTime;
 	//CStatic m_sta_set;
 private:
 	CImage m_picImage;

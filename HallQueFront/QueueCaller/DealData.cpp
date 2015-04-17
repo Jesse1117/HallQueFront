@@ -1,28 +1,37 @@
 #include "StdAfx.h"
 #include "DealData.h"
+#include "CallThread.h"
+#include "CommonStrMethod.h"
 CDealData* dealdata;
 CDealData::CDealData(void)
 {
+	SetTimer(NULL,0,1000,MyDoOutTimerMsg);
+	dealdata = this;
+	pCallThread = new CCallThread();
+	m_strCallPath = CommonStrMethod::GetModuleDir();
+	m_strCallPath+=_T("\\config");
+	CommonStrMethod::CreatePath(m_strCallPath);
+	m_strCallPath+=_T("\\CallerSet.ini");
 }
 
-CDealData::~CDealData(void)
+CDealData::~CDealData(void)							
 {
-	if(m_CallThreadHandle!=INVALID_HANDLE_VALUE)
-	{
-		TerminateThread(m_CallThreadHandle,0);
-		CloseHandle(m_CallThreadHandle);
-	}
 }
 
 BOOL CDealData::Start()
 {
-	m_CallThreadHandle = CreateThread(NULL,0,CallThread,this,0,NULL);
-	if (m_CallThreadHandle!=NULL)
-	{
-		SetTimer(NULL,0,1000,MyDoOutTimerMsg);
+	wchar_t wbuf[255];
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("Buss1"),NULL,wbuf,255,m_strCallPath);
+	CString Buss1(wbuf);
+	m_strBuss1 = Buss1;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("Buss2"),NULL,wbuf,255,m_strCallPath);
+	CString Buss2(wbuf);
+	m_strBuss2 = Buss2;
+
+		pCallThread->Start();
 		return TRUE;
-	}
-	else return FALSE;
 }
 
 BOOL CDealData::HasData()
@@ -39,14 +48,7 @@ void CDealData::AddData(SLZData& data)
 	m_WaitList.AddTail(data);
 }
 
-DWORD WINAPI CDealData::CallThread(LPVOID lpParam)
-{
-	while (TRUE)
-	{
-			
-	}
-	return 0;
-}
+
 
 void CALLBACK CDealData::MyDoOutTimerMsg(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
@@ -59,6 +61,19 @@ void CALLBACK CDealData::MyDoOutTimerMsg(HWND hwnd, UINT uMsg, UINT idEvent, DWO
 		if (!pos)break;
 		data = dealdata->m_WaitList.GetAt(pos);
 		CTime currenttime = CTime::GetCurrentTime();
-		data.GetRecvTime();
+		CTime recvtime = 	data.GetRecvTime();
+		if (currenttime-recvtime == CTimeSpan(0,0,data.GetWaitTime(),0))
+		{
+			if (data.GetBussName()==dealdata->m_strBuss1)
+			{
+				dealdata->m_DataList1.AddTail(data);
+			}
+			if (data.GetBussName()==dealdata->m_strBuss2)
+			{
+				dealdata->m_DataList2.AddTail(data);
+			}
+			dealdata->m_WaitList.RemoveAt(pos);
+		}
+	
 	}
 }

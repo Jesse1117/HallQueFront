@@ -12,6 +12,7 @@
 #include "SoundPlay.h"
 #include "com/ComInit.h"
 #include "ShortMsgModem.h"
+#include "DealData.h"
 // CComSetDlg ¶Ô»°¿ò
 
 IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
@@ -29,6 +30,7 @@ CComSetDlg::CComSetDlg(CWnd* pParent /*=NULL*/)
 	m_strCallPath+=_T("\\CallerSet.ini");
 	m_pShortMsg = CShortMsgModem::GetInstance();
 	m_pComInit = CComInit::GetInstance();
+	m_pDealData = CDealData::GetInstance();
 }
 
 CComSetDlg::~CComSetDlg()
@@ -53,6 +55,9 @@ void CComSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX,IDC_COMBO_MSGCOM,m_combo_MsgCom);
 	DDX_Text(pDX,IDC_EDIT_CALLADD1,m_strCallerAdd1);
 	DDX_Text(pDX,IDC_EDIT_CALLADD2,m_strCallerAdd2);
+	DDX_Text(pDX,IDC_EDIT_BUSS1,m_strEditBuss1);
+	DDX_Text(pDX,IDC_EDIT_BUSS2,m_strEditBuss2);
+	DDX_Text(pDX,IDC_EDIT_CALLWAITTIME,m_strCallWaitTime);
 }
 
 
@@ -85,6 +90,7 @@ BOOL CComSetDlg::OnInitDialog()
 	m_pSever->Start();
 	m_pPlaySound->Init();
 	//m_pComInOut->Start();
+	m_pDealData->Start();
 	SetTimer(11,10,NULL);
 	return TRUE;
 }
@@ -213,6 +219,18 @@ void CComSetDlg::LoadInfo()
 	GetPrivateProfileString(_T("CompSet"),_T("CallerAdd2"),NULL,wbuf,255,m_strCallPath);
 	CString strCallerAdd2(wbuf);
 	m_strCallerAdd2 = strCallerAdd2;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("Buss1"),NULL,wbuf,255,m_strCallPath);
+	CString strBuss1(wbuf);
+	m_strEditBuss1 = strBuss1;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("Buss2"),NULL,wbuf,255,m_strCallPath);
+	CString strBuss2(wbuf);
+	m_strEditBuss2 = strBuss2;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("CallWaitTime"),NULL,wbuf,255,m_strCallPath);
+	CString strwait(wbuf);
+	m_strCallWaitTime = strwait;
 	UpdateData(FALSE);
 }
 
@@ -245,6 +263,9 @@ void CComSetDlg::OnBnClickedOk()
 	WritePrivateProfileString(_T("CompSet"),_T("ShortMsg"),m_strShortMsg,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("CallerAdd1"),m_strCallerAdd1,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("CallerAdd2"),m_strCallerAdd2,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("Buss1"),m_strEditBuss1,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("Buss2"),m_strEditBuss2,m_strCallPath);
+	WritePrivateProfileString(_T("CompSet"),_T("CallWaitTime"),m_strCallWaitTime,m_strCallPath);
 	ShowWindow(SW_HIDE);
 }
 

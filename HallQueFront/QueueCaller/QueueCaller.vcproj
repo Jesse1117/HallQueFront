@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CreatePacket.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DealData.cpp"
 				>
 			</File>
@@ -288,6 +292,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TCPConnect.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TcpSever.cpp"
 				>
 			</File>
@@ -338,6 +346,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CreatePacket.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DataDef.h"
 				>
 			</File>
@@ -382,9 +394,6 @@
 				>
 			</File>
 			<File
-<<<<<<< HEAD
-				RelativePath=".\SLZCallerData.h"
-=======
 				RelativePath=".\com\SLZCallerData.h"
 				>
 			</File>
@@ -394,7 +403,6 @@
 			</File>
 			<File
 				RelativePath=".\com\SLZCWndScreen.h"
->>>>>>> origin/daqing
 				>
 			</File>
 			<File
@@ -411,6 +419,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TCPConnect.h"
 				>
 			</File>
 			<File

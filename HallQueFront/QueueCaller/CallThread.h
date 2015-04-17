@@ -1,10 +1,12 @@
 #pragma once
-
-
+#include "SLZData.h"
+#include <afxwin.h>
+#include <afxmt.h>
 class SLZCCaller;
 class CCallerCmdData;
 class CallerCmd;
 class SLZCWndScreen;
+class CDealData;
 
 class CCallThread
 {
@@ -30,6 +32,18 @@ private:
 	void ReturnToCaller(CallerCmd* callerCmd);
 
 private:
+	CDealData* m_pDealData;
+	CList<SLZData> m_CallingList; // 正在呼叫队列
+	UINT m_CallerAdd1;
+	UINT m_CallerAdd2;
+	CString m_strBuss1;
+	CString m_strBuss2;
+	int  m_CallWaitTime;   //呼叫等待时间
+	CMutex m_mtCallLock;  //呼叫锁
+	CMutex m_mtCallBackLock;  //回调锁
+	CString m_strCallPath;
+	BOOL m_bSendMsg;
+	CString m_strSendMsg;   //发送的短信内容
 	void OnLogin(CallerCmd* callerCmd);
 	void OnQuit(CallerCmd* callerCmd);
 	void OnCall(CallerCmd* callerCmd);
@@ -44,4 +58,11 @@ private:
 	void OnCallMana(CallerCmd* callerCmd);
 	void OnCallBusc(CallerCmd* callerCmd);
 	void OnExChange(CallerCmd* callerCmd);
+
+	static void CALLBACK MyDoOutTimerMsg(
+		HWND hwnd, // handle of window for timer messages
+		UINT uMsg, // WM_TIMER message
+		UINT idEvent, // timer identifier
+		DWORD dwTime // current system time	
+		);
 };

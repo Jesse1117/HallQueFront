@@ -2,7 +2,8 @@
 #include "TcpSever.h"
 #include "CommonStrMethod.h"
 #include "DealData.h"
-
+#include "TCPConnect.h"
+#include "CreatePacket.h"
 CTcpSever::CTcpSever(void)
 {
 	m_strCallPath = CommonStrMethod::GetModuleDir();
@@ -32,6 +33,7 @@ CTcpSever::~CTcpSever(void)
 
 BOOL CTcpSever::Start()
 {
+
 	if (!InitSocket())
 	{
 		return FALSE;
@@ -43,6 +45,23 @@ BOOL CTcpSever::Start()
 		return TRUE;
 	}
 	else return FALSE;
+}
+
+void CTcpSever::LoadConfig()
+{
+	wchar_t wbuf[255];
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("IP"),NULL,wbuf,255,m_strCallPath);
+	CString strIP(wbuf);
+	m_strIP = strIP;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("Port"),NULL,wbuf,255,m_strCallPath);
+	CString strPort(wbuf);
+	m_strPort = strPort;
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("WaitTime"),NULL,wbuf,255,m_strCallPath);
+	CString strWaitTime(wbuf);
+	m_iWaitTime = CommonStrMethod::Str2Int(strWaitTime);
 }
 
 BOOL CTcpSever::InitSocket()
@@ -108,9 +127,20 @@ BOOL CTcpSever::InitSocket()
 
 DWORD WINAPI CTcpSever::WorkerThread(LPVOID lpParam)
 {
+	CTcpSever* Server = (CTcpSever*) lpParam;
 	while(TRUE)
 	{
-		
+		if (CDealData::GetInstance()->HasData())
+		{
+			Server->m_ServerLock.Lock();
+			SLZData data = CDealData::GetInstance()->m_DoneList.GetHead();
+			Server->m_ServerLock.Unlock();
+			data.SetWaitTime(Server->m_iWaitTime);
+			CCreatePacket packet;
+			CString strSend = packet.ProducePacket(data);
+			CTCPConnect connect;
+			connect.SendPackage(strSend,Server->m_strIP,Server->m_strPort,0);
+		}
 	}
 	return 0;
 }
@@ -132,7 +162,10 @@ DWORD WINAPI CTcpSever::AcceptThread(LPVOID lpParam)
 				if (strlen(buf)>0)
 				{
 					SLZData data = Server->Dodata(buf);
+					Server->m_ServerLock.Lock();
 					CDealData::GetInstance()->AddData(data);
+					Server->m_ServerLock.Unlock();
+
 				}
 			}
 		}
@@ -182,7 +215,7 @@ SLZData CTcpSever::Dodata(std::string buf)
 	lastIndex = buf.find("</ShortMsg>");
 	std::string ShortMsg = buf.substr(firstIndex+10,lastIndex-firstIndex-10);
 	CString strShortMsg(ShortMsg.c_str());
-	data.SetPhoneNum(strShortMsg);
+	data.SetSendMsg(strShortMsg);
 	data.SetRecvTime(CTime::GetCurrentTime());
 	return data;
 }

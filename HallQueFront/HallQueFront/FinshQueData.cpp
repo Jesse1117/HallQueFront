@@ -89,6 +89,7 @@ BOOL CFinshQueData::GetFinshedData()
 	{
 		CComplSocketClient client;
 		CCreatePacket packet;
+		data.SetWaitTime(theApp.m_logicVariables.iWaitTime);
 		CString sendmsg = packet.ProducePacket(data);
 		std::string recvMsg;
 		int actRecvSize = 0;

@@ -7,6 +7,7 @@ class CTcpSever;
 class CSoundPlay;
 class CComInit;
 class CShortMsgModem;
+class CDealData;
 //class CDoComInOut;
 class CComSetDlg : public CDialog
 {
@@ -42,6 +43,9 @@ public:
 	CString m_strPlayTimes;
 	CString m_strCallPath;
 	CString m_strSelfPort;
+	CString m_strEditBuss1;
+	CString m_strEditBuss2;
+	CString m_strCallWaitTime;
 
 	CButton m_Check_SendMsg;
 	CString m_strMsgCom;
@@ -63,7 +67,7 @@ private:
 	CTcpSever* m_pSever;
 	CSoundPlay* m_pPlaySound;
 	//CDoComInOut* m_pComInOut;
-
+	CDealData* m_pDealData;
 	CComInit* m_pComInit;
 	CShortMsgModem* m_pShortMsg;
 public:

@@ -368,6 +368,8 @@
 #define IDC_COMBO1                      1206
 #define IDC_EDIT_PHONENUM               1208
 #define IDC_BUTTON_NUM2                 1210
+#define IDC_EDIT1                       1211
+#define IDC_EDIT_WAITTIME               1211
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -437,7 +439,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        189
 #define _APS_NEXT_COMMAND_VALUE         32833
-#define _APS_NEXT_CONTROL_VALUE         1211
+#define _APS_NEXT_CONTROL_VALUE         1212
 #define _APS_NEXT_SYMED_VALUE           117
 #endif
 #endif
