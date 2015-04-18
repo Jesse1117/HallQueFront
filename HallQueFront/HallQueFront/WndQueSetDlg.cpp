@@ -18,6 +18,7 @@ CWndQueSetDlg::CWndQueSetDlg(CWnd* pParent /*=NULL*/)
 	m_Queinfo_path = convert.GetExeFullFilePath();
 	m_Queinfo_path += _T("\\QueBasicInfo\\QueBasicInfo.dat");
 	m_bMakeAll = FALSE;
+	m_bUnOrder = FALSE;
 }
 
 CWndQueSetDlg::~CWndQueSetDlg()
@@ -30,6 +31,7 @@ void CWndQueSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX,IDC_LIST_UNDSTQUE,m_list_undstque);
 	DDX_Control(pDX,IDC_LIST_ABLEQUE,m_list_ableque);
 	DDX_Control(pDX,IDC_CHECK_MKALL,m_check_makeall);
+	DDX_Control(pDX,IDC_CHECK_UNORDER,m_check_UnOrder);
 }
 
 
@@ -40,6 +42,7 @@ BEGIN_MESSAGE_MAP(CWndQueSetDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_UP, &CWndQueSetDlg::OnBnClickedBtnUp)
 	ON_BN_CLICKED(IDC_BTN_DOWN, &CWndQueSetDlg::OnBnClickedBtnDown)
 	ON_BN_CLICKED(IDC_CHECK_MKALL, &CWndQueSetDlg::OnBnClickedCheckMkall)
+	ON_BN_CLICKED(IDC_CHECK_UNORDER, &CWndQueSetDlg::OnBnClickedCheckUnorder)
 END_MESSAGE_MAP()
 
 
@@ -77,6 +80,7 @@ BOOL CWndQueSetDlg::ReadWndQueInfo()
 	POSITION pos=pWndSet->m_ListCtr_Window.GetFirstSelectedItemPosition();
 	int index=pWndSet->m_ListCtr_Window.GetNextSelectedItem(pos);
 	SLZWindow windowinfo=pWndSet->m_List_WindowInfo.GetAt(pWndSet->m_List_WindowInfo.FindIndex(index));
+	m_bUnOrder = windowinfo.GetUnOrder();
 	CStringArray queidarray;
 	windowinfo.GetArrayQueId(queidarray);
 	CArray<int,int> aryListBoxSel;
@@ -138,6 +142,11 @@ BOOL CWndQueSetDlg::OnInitDialog()
 	{
 		m_check_makeall.SetCheck(BST_UNCHECKED);
 	}
+	if (!m_bUnOrder)
+	{
+		m_check_UnOrder.SetCheck(BST_UNCHECKED);
+	}
+	else m_check_UnOrder.SetCheck(BST_CHECKED);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
@@ -292,5 +301,18 @@ void CWndQueSetDlg::OnBnClickedCheckMkall()
 	else
 	{
 		m_bMakeAll = FALSE;
+	}
+}
+
+void CWndQueSetDlg::OnBnClickedCheckUnorder()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if (BST_CHECKED==m_check_UnOrder.GetCheck())
+	{
+		m_bUnOrder = TRUE;
+	}
+	else
+	{
+		m_bUnOrder = FALSE;
 	}
 }

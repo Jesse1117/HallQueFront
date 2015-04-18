@@ -445,6 +445,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ScreenAddSetDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ShortMsgModem.cpp"
 				>
 			</File>
@@ -880,6 +884,10 @@
 			</File>
 			<File
 				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ScreenAddSetDlg.h"
 				>
 			</File>
 			<File

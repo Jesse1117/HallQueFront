@@ -67,6 +67,8 @@
 #define IDB_BITMAP_SENDMSG              185
 #define IDD_PROPMSG_JUDGE               186
 #define IDR_TIPMENU                     187
+#define IDD_DIALOG1                     188
+#define IDD_DIALOG_SCRADDSET            188
 #define IDC_ED_BNWIDTH                  1000
 #define IDC_ED_BNHEIGHT                 1001
 #define IDC_COMBO_TRANS                 1003
@@ -243,6 +245,7 @@
 #define IDC_LIST_PAGE                   1119
 #define IDC_LIST_MSG                    1119
 #define IDC_LIST_CONTENT                1119
+#define IDC_LIST_ADDTYPE                1119
 #define IDC_ED_CARDTYPENAME             1120
 #define IDC_EDIT_EVALTIMEOUT            1120
 #define IDC_LIST_SOUNDMSG2              1120
@@ -282,6 +285,7 @@
 #define IDC_DATE_CLOSE                  1139
 #define IDC_CHECK2                      1140
 #define IDC_CHECK_CLEARDATA             1140
+#define IDC_CHECK_UNORDER               1140
 #define IDC_DATETIMEPICKER3             1141
 #define IDC_DATE_CLEARDATA              1141
 #define IDC_CHECK3                      1142
@@ -314,6 +318,7 @@
 #define IDC_BUTTON8                     1160
 #define IDC_BTN_DOWN                    1160
 #define IDC_EDIT_STBID                  1160
+#define IDC_BUTTON_WNDSET               1160
 #define IDC_EDIT_STBNAME                1161
 #define IDC_EDIT_STBIP                  1162
 #define IDC_EDIT_STBPORT                1163
@@ -355,6 +360,8 @@
 #define IDC_EDIT_MSG                    1203
 #define IDC_COMBO1                      1206
 #define IDC_EDIT_PHONENUM               1208
+#define IDC_EDIT_ADDNUM                 1209
+#define IDC_LIST_ADDNUM                 1210
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -422,9 +429,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        188
+#define _APS_NEXT_RESOURCE_VALUE        189
 #define _APS_NEXT_COMMAND_VALUE         32833
-#define _APS_NEXT_CONTROL_VALUE         1209
+#define _APS_NEXT_CONTROL_VALUE         1213
 #define _APS_NEXT_SYMED_VALUE           117
 #endif
 #endif

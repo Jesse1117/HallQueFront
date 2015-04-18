@@ -72,46 +72,46 @@ public:
 		m_iEvaluatorId = iEvaluatorId;
 	}
 	//获取窗口屏地址
-	int GetWndScreenId()const
+	void  GetWndScreenId(CArray<int>& wndscradd)const
 	{
-		return m_iWndScreenId;
+		wndscradd.Copy(m_iWndScreenId);
 	}
 	//设置窗口屏地址
-	void SetWndScreenId(int iWndScreenId)
+	void SetWndScreenId(CArray<int>& wndscradd)
 	{
-		m_iWndScreenId=iWndScreenId;
+		m_iWndScreenId.Copy(wndscradd);
 	}
 	//获取综合屏地址
-	int GetComScreenId() const
+	void GetComScreenId(CArray<int>& wndcomadd) const
 	{
-		return m_iComScreenId;	 
+		wndcomadd.Copy(m_iComScreenId);
 	}
 	//设置综合屏地址
-	void SetComScreenId(int iComScreenId) 
+	void SetComScreenId(CArray<int>& wndcomadd) 
 	{
-		m_iComScreenId=iComScreenId;
+		m_iComScreenId.Copy(wndcomadd);
 	}
 
 	//获取通屏IP地址
-	CString GetLEDIPId()
+	void  GetLEDIPId(CStringArray& IpAdd)
 	{
-		return m_strLEDIPId;
+		IpAdd.Copy(m_strLEDIPId);
 	}
 
-	void SetLEDIPId(const CString& LEDIPId)
+	void SetLEDIPId(CStringArray&  IpAdd)
 	{
-		m_strLEDIPId=LEDIPId;
+		m_strLEDIPId.Copy(IpAdd);
 	}
 	
 	//获取通屏物理地址
-	int GetLEDPhyId()
+	void GetLEDPhyId(CArray<int>& PhyId)
 	{
-		return m_iLEDPhyId;
+		PhyId.Copy(m_iLEDPhyId);
 	}
 
-	void SetLEDPhyId(const int LEDPhyId)
+	void SetLEDPhyId(CArray<int>& PhyId)
 	{
-		m_iLEDPhyId=LEDPhyId;
+		m_iLEDPhyId.Copy(PhyId);
 	}
 
 	int GetLEDPipeId()
@@ -264,6 +264,11 @@ public:
 	{
 		m_iEvaTimeOut = iEvaTimeOut;
 	}
+
+	BOOL GetUnOrder()const	{return m_bUnOrder;}
+
+	void SetUnOrder(BOOL bUnOrder){m_bUnOrder = bUnOrder;}
+
 	virtual void Serialize( CArchive& ar );
 	DECLARE_SERIAL(SLZWindow)
 
@@ -274,10 +279,14 @@ private:
 	CString m_strWindowCallName;	//呼叫名称
 	int m_iCallerId;				//呼叫器地址
 	int m_iEvaluatorId;				//评价器地址
-	int m_iWndScreenId;				//窗口屏地址
-	int m_iComScreenId;				//综合屏地址
-	CString m_strLEDIPId;			//通屏IP地址
-	int m_iLEDPhyId;				//通屏物理地址
+	CArray<int> m_iWndScreenId;				//窗口屏地址
+	CArray<int> m_iComScreenId;				//综合屏地址
+	int m_wndScrSize;			
+	int m_comScrSize;
+	CStringArray m_strLEDIPId;			//通屏IP地址
+	CArray<int> m_iLEDPhyId;				//通屏物理地址
+	int m_IPSize;
+	int m_PhySize;
 	int m_iLEDPipeId;				//通屏通道号
 	CString m_strStbId;				//机顶盒编号
 	//CString m_staffLoginId;			//当前登录员工
@@ -296,5 +305,6 @@ private:
 	CString m_strAdMsg;				//广告信息
 	//BOOL m_FlagMustEval;			//是否强制评价
 	UINT m_iEvaTimeOut;			//评价超时秒数
+	BOOL m_bUnOrder;			//是否不去分优先级
 };
 

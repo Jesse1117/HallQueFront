@@ -27,6 +27,7 @@ public:
 	CStringArray m_AbleQueId;			//可处理队列ID 数组
 	CString m_AbleQueName;			//可处理队列名称
 	BOOL m_bMakeAll;		//是否应用到所有窗口
+	BOOL m_bUnOrder;   //是否不区分优先级
 private:
 	BOOL ReadQueInfoFromFile();
 	BOOL ReadWndQueInfo();
@@ -34,6 +35,7 @@ private:
 	CCommonConvert convert;
 	void ArrayOrder(CArray<int,int>& iArray);		//数组排序
 	CButton m_check_makeall;
+	CButton m_check_UnOrder;
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedBtnAddque();
@@ -42,4 +44,5 @@ public:
 	afx_msg void OnBnClickedBtnUp();
 	afx_msg void OnBnClickedBtnDown();
 	afx_msg void OnBnClickedCheckMkall();
+	afx_msg void OnBnClickedCheckUnorder();
 };

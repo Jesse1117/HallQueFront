@@ -92,4 +92,5 @@ public:
 	afx_msg void OnEnChangeEditLedpipe();
 	afx_msg void OnBnClickedAutologin();
 	afx_msg void OnBnClickedCancelautologin();
+	afx_msg void OnBnClickedButtonWndset();
 };
