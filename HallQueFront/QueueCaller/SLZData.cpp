@@ -9,6 +9,8 @@ SLZData::SLZData(void) : m_iCusLevel(0)
 , m_bIsFinshEva(FALSE)
 , m_bIsOpenEva(FALSE)
 , m_iWindowShowId(0)
+,m_iQueNum(0)
+,m_iWaitTime(0)
 {
 	m_strSerialId = GetOnlyId();
 }

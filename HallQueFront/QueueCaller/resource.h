@@ -9,7 +9,7 @@
 #define IDD_QUEUECALLER_LOGIN           102
 #define IDR_MAINFRAME                   128
 #define IDD_REGISTERDLG                 129
-#define IDI_MAINFRAME                   129
+#define IDI_MAINFRAME                   135
 #define IDD_CHANGEPASSWORD              130
 #define IDD_DIALOG1                     131
 #define IDR_MENU1                       132

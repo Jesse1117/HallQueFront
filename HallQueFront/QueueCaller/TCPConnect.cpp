@@ -52,10 +52,11 @@ BOOL CTCPConnect::SendPackage(const CString strSendPackage,CString strIP,CString
 	if (StartSocket(strPort,strIP))
 	{
 		int size = strSendPackage.GetLength();
-		char* cSendPackage = new char[size+1];
+		char* cSendPackage = new char[2*size+1];
 		CCommonConvert::CStringToChar(strSendPackage,cSendPackage);
-		size = sizeof(cSendPackage);
+		size = strlen(cSendPackage);
 		SendTo(cSendPackage,size);
+		delete cSendPackage;
 		char CardRecv[255];
 		BOOL RecvTemp = FALSE;
 		if (iOverTime!=0)
@@ -69,6 +70,7 @@ BOOL CTCPConnect::SendPackage(const CString strSendPackage,CString strIP,CString
 		}
 		CloseSocket();
 	}
+	else return FALSE;
 	return TRUE;
 }
 

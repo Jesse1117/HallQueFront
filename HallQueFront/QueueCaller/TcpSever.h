@@ -16,7 +16,12 @@ private:
 	BOOL InitSocket();
 	static DWORD WINAPI WorkerThread(LPVOID lpParam);
 	static DWORD WINAPI AcceptThread(LPVOID lpParam);
+
+	void WriteErrLog(CString strErr);
+	void WriteLogWithTime(CString strSockLog);			//–¥»Î¥ÌŒÛ»’÷æ
+	BOOL AppendWriteFile(CString strText, CString strFileName);
 	CString m_strCallPath;
+	CString m_strLogFilePath;
 	HANDLE m_hAcceptThreadHandle;
 	HANDLE m_hWorhThreadHandle;
 	SOCKET m_ListeningSocket;

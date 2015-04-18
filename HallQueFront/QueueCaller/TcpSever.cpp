@@ -4,12 +4,14 @@
 #include "DealData.h"
 #include "TCPConnect.h"
 #include "CreatePacket.h"
-CTcpSever::CTcpSever(void)
+#include "CommonConvert.h"
+CTcpSever::CTcpSever(void):m_iWaitTime(0)
 {
 	m_strCallPath = CommonStrMethod::GetModuleDir();
 	m_strCallPath+=_T("\\config");
 	CommonStrMethod::CreatePath(m_strCallPath);
 	m_strCallPath+=_T("\\CallerSet.ini");
+	m_strLogFilePath = CommonStrMethod::GetModuleDir() + _T("log/");
 }
 
 CTcpSever::~CTcpSever(void)
@@ -33,7 +35,7 @@ CTcpSever::~CTcpSever(void)
 
 BOOL CTcpSever::Start()
 {
-
+	LoadConfig();
 	if (!InitSocket())
 	{
 		return FALSE;
@@ -139,7 +141,12 @@ DWORD WINAPI CTcpSever::WorkerThread(LPVOID lpParam)
 			CCreatePacket packet;
 			CString strSend = packet.ProducePacket(data);
 			CTCPConnect connect;
-			connect.SendPackage(strSend,Server->m_strIP,Server->m_strPort,0);
+			if (connect.SendPackage(strSend,Server->m_strIP,Server->m_strPort,0))
+			{
+				Server->m_ServerLock.Lock();
+				SLZData data = CDealData::GetInstance()->m_DoneList.RemoveHead();
+				Server->m_ServerLock.Unlock();
+			}			
 		}
 	}
 	return 0;
@@ -161,11 +168,21 @@ DWORD WINAPI CTcpSever::AcceptThread(LPVOID lpParam)
 			{
 				if (strlen(buf)>0)
 				{
+					CString strRecv;
+					CCommonConvert::CharToCstring(strRecv,buf);
+					Server->WriteLogWithTime(_T("recv:")+strRecv);
 					SLZData data = Server->Dodata(buf);
 					Server->m_ServerLock.Lock();
 					CDealData::GetInstance()->AddData(data);
 					Server->m_ServerLock.Unlock();
-
+					char returnbuf[2]={0};
+					returnbuf[1] = '1';
+					int iRet = ::send(NewConnection,returnbuf,sizeof(returnbuf),0);
+					if (iRet==SOCKET_ERROR)
+					{
+						Server->WriteLogWithTime(_T("send error"));
+					}
+					else{Server->WriteLogWithTime(_T("send successs"));}
 				}
 			}
 		}
@@ -218,4 +235,47 @@ SLZData CTcpSever::Dodata(std::string buf)
 	data.SetSendMsg(strShortMsg);
 	data.SetRecvTime(CTime::GetCurrentTime());
 	return data;
+}
+
+void CTcpSever::WriteErrLog(CString strSockLog)
+{
+	CString str = _T("Error: ") + strSockLog;
+	WriteLogWithTime(str);
+}
+
+void CTcpSever::WriteLogWithTime(CString strSockLog)
+{
+	CTime time = CTime::GetCurrentTime();
+	CString str = time.Format(_T("%Y-%m-%d %H:%M:%S")) + _T("  \t") + strSockLog + _T("\r\n\r\n");
+	CString strLogFile = time.Format(_T("log_%Y%m%d.log"));
+	if(!CommonStrMethod::PathFileExist(m_strLogFilePath))
+	{
+		if(!CommonStrMethod::CreatePath(m_strLogFilePath))
+		{
+			return;
+		}
+	}
+	AppendWriteFile(str, m_strLogFilePath + strLogFile);
+}
+
+BOOL CTcpSever::AppendWriteFile(CString strText, CString strFileName)
+{
+	CFile file;
+	if(!file.Open(strFileName, 
+		CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite))
+	{
+		//CString str;
+		//str.Format(_T("创建或打开日志文件失败,您所使用的计算机帐号没有相应的磁盘写权限:\r\n\t%s"), g_pControl->m_strLogFilePath);
+		//AfxMessageBox(str);
+		return FALSE;
+	}
+	CHAR* szBuf = (CHAR*)malloc(strText.GetLength()*2 + 1);
+	memset(szBuf, 0, strText.GetLength()*2 + 1);
+	CommonStrMethod::WChar2Char(szBuf, 
+		strText.GetLength()*2 + 1, strText.GetBuffer());
+	file.SeekToEnd();
+	file.Write(szBuf, strlen(szBuf));
+	file.Close();
+
+	return TRUE;
 }

@@ -71,7 +71,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\QueueCaller.ico"
-IDI_MAINFRAME           ICON                    "res\\HallQueFrontServer.ico"
+IDI_MAINFRAME           ICON                    "res\\QueueCaller.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -153,7 +153,7 @@ BEGIN
     PUSHBUTTON      "上移",IDC_BUTTON_MVUP,219,122,45,17
     PUSHBUTTON      "下移",IDC_BUTTON_MVDOWN,219,151,45,17
     PUSHBUTTON      "删除",IDC_BUTTON_DEL,219,178,45,17
-    CONTROL         "应用到所有窗口",IDC_CHECK_MKJTTSALL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,135,229,72,10
+    CONTROL         "应用到所有窗口",IDC_CHECK_MKJTTSALL,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,135,229,72,10
     CONTROL         "普通话",IDC_RAD_COMCHN,"Button",BS_AUTORADIOBUTTON,55,31,40,10
     CONTROL         "英语",IDC_RAD_ENGLISH,"Button",BS_AUTORADIOBUTTON,123,30,32,10
     PUSHBUTTON      "业务名称",IDC_BUTTON_BUSNAME,33,135,49,18
@@ -182,13 +182,13 @@ BEGIN
     COMBOBOX        IDC_COMBO_SHOWCOLOR,327,158,40,40,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "下移",IDC_BTN_MOVEDOWN,326,95,42,11
     PUSHBUTTON      "上移",IDC_BTN_MOVEUP,326,79,42,11
-    CONTROL         "应用到所有窗口",IDC_CHECK_MKSHALL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,163,241,72,10
+    CONTROL         "应用到所有窗口",IDC_CHECK_MKSHALL,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,163,241,72,10
     LTEXT           "选择显示语言",IDC_STATIC,136,52,49,8
     CONTROL         "汉语",IDC_RAD_SHOWCHN,"Button",BS_AUTORADIOBUTTON,213,52,32,10
     CONTROL         "英语",IDC_RAD_SHOWENG,"Button",BS_AUTORADIOBUTTON,262,52,32,10
     PUSHBUTTON      "业务名称",IDC_BTN_BUSNAME,27,137,75,18
-    EDITTEXT        IDC_EDIT_SHOWTIME,25,215,28,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_ADMSG,122,215,251,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_SHOWTIME,25,215,28,14,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_EDIT_ADMSG,122,215,251,14,ES_AUTOHSCROLL | WS_DISABLED
     LTEXT           "秒后显示广告语",IDC_STATIC,60,218,57,8
 END
 

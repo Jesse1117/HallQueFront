@@ -23,7 +23,7 @@ CComSetDlg::CComSetDlg(CWnd* pParent /*=NULL*/)
 	m_pPlaySound = CSoundPlay::GetInstance();
 	//m_pComInOut = CDoComInOut::GetInstance();
 	m_pSever = new CTcpSever();
-	m_hIcon = AfxGetApp()->LoadIcon(IDI_MAINFRAME);
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_strCallPath = CommonStrMethod::GetModuleDir();
 	m_strCallPath+=_T("\\config");
 	CommonStrMethod::CreatePath(m_strCallPath);

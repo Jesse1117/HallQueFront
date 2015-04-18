@@ -12,7 +12,7 @@ CCreatePacket::~CCreatePacket(void)
 CString CCreatePacket::ProducePacket(const SLZData& data)
 {
 	CString packet = _T("<?xml version=\"1.0\" encoding=\"UTF-8\"?><dataPacket version=\"1.0\"><headCode>hallQue</headCode>");
-	packet.AppendFormat(_T("<SerialId>%s</SerialId"),data.GetSerialId());
+	packet.AppendFormat(_T("<SerialId>%s</SerialId>"),data.GetSerialId());
 	packet.AppendFormat(_T("<BussName>%s</BussName>"),data.GetBussName());
 	packet.AppendFormat(_T("<QueNum>%s</QueNum>"),data.GetQueueNumber());
 	packet.AppendFormat(_T("<CardNum>%s</CardNum>"),data.GetCardNumber());
