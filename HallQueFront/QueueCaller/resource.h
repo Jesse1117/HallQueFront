@@ -9,12 +9,12 @@
 #define IDD_QUEUECALLER_LOGIN           102
 #define IDR_MAINFRAME                   128
 #define IDD_REGISTERDLG                 129
-#define IDI_MAINFRAME                   135
 #define IDD_CHANGEPASSWORD              130
 #define IDD_DIALOG1                     131
 #define IDR_MENU1                       132
 #define IDD_DIALOG2                     133
 #define IDD_DIALOG_COMSET               133
+#define IDI_MAINFRAME                   135
 #define IDD_DIALOG_SHOWMSGSET           160
 #define IDD_DIALOG_JTTSCALLSET          179
 #define IDC_COMBO_USERNAME              1001
@@ -39,6 +39,7 @@
 #define IDC_EDIT_CALLNAME               1021
 #define IDC_EDIT_WAITTIME               1022
 #define IDC_EDIT_PLAYTIME               1023
+#define IDC_EDIT_WNDID2                 1024
 #define IDC_EDIT_SELFPORT               1025
 #define IDC_CHECK_SENDMSG               1027
 #define IDC_EDIT_SENDMSG                1029

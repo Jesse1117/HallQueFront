@@ -301,7 +301,7 @@ DWORD WINAPI SLZCWndScreen::DoWndScreenMsgThread(LPVOID pParm)
 	return 0;
 }
 
-void SLZCWndScreen::AddScreenMsg(CString& msg,const int address)
+void SLZCWndScreen::mAddScreenMsg(CString& msg,const int address)
 {
 	if(msg!=_T(""))
 	{

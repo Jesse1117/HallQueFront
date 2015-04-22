@@ -25,7 +25,7 @@ public:
 	BOOL Init();
 	//BOOL End();
 
-	BOOL DataPlay(const SLZData& Data,BOOL bWait=FALSE);
+	BOOL DataPlay(SLZData Data,BOOL bWait=FALSE);
 	//BOOL DataPlay(const CString strPlay);
 	static UINT PlayVoiceThread(LPVOID pParam);
 private:
@@ -37,6 +37,7 @@ private:
 	CString m_strWndName;
 	int m_iPlayTimes;
 	int m_iScreenId;
+	int m_iScreenId2;
 
 	BOOL m_bPlayVoiceThread;
 	CMutex m_mtPlayStrList;

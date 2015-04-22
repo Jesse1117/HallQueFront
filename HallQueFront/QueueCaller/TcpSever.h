@@ -14,7 +14,7 @@ public:
 	BOOL Start();
 private:
 	BOOL InitSocket();
-	static DWORD WINAPI WorkerThread(LPVOID lpParam);
+//	static DWORD WINAPI WorkerThread(LPVOID lpParam);
 	static DWORD WINAPI AcceptThread(LPVOID lpParam);
 
 	void WriteErrLog(CString strErr);

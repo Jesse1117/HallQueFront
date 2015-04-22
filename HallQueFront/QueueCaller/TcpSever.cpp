@@ -2,8 +2,6 @@
 #include "TcpSever.h"
 #include "CommonStrMethod.h"
 #include "DealData.h"
-#include "TCPConnect.h"
-#include "CreatePacket.h"
 #include "CommonConvert.h"
 CTcpSever::CTcpSever(void):m_iWaitTime(0)
 {
@@ -40,7 +38,7 @@ BOOL CTcpSever::Start()
 	{
 		return FALSE;
 	}
-	m_hWorhThreadHandle = CreateThread(NULL,0,WorkerThread,this,0,NULL);
+//	m_hWorhThreadHandle = CreateThread(NULL,0,WorkerThread,this,0,NULL);
 	m_hAcceptThreadHandle = CreateThread(NULL,0,AcceptThread,this,0,NULL);
 	if (m_hAcceptThreadHandle!=NULL&&m_hAcceptThreadHandle!=NULL)
 	{
@@ -126,7 +124,7 @@ BOOL CTcpSever::InitSocket()
 	} 
 	return TRUE;
 }
-
+/*
 DWORD WINAPI CTcpSever::WorkerThread(LPVOID lpParam)
 {
 	CTcpSever* Server = (CTcpSever*) lpParam;
@@ -135,22 +133,34 @@ DWORD WINAPI CTcpSever::WorkerThread(LPVOID lpParam)
 		if (CDealData::GetInstance()->HasData())
 		{
 			Server->m_ServerLock.Lock();
-			SLZData data = CDealData::GetInstance()->m_DoneList.GetHead();
+			SLZData data;
+			if (!CDealData::GetInstance()->m_DoneList.IsEmpty())
+			{
+				 data= CDealData::GetInstance()->m_DoneList.GetHead();
+			}
 			Server->m_ServerLock.Unlock();
 			data.SetWaitTime(Server->m_iWaitTime);
 			CCreatePacket packet;
 			CString strSend = packet.ProducePacket(data);
 			CTCPConnect connect;
+			if (Server->m_strIP.IsEmpty() && Server->m_strPort.IsEmpty())
+			{
+				CDealData::GetInstance()->m_DoneList.RemoveHead();
+			}
 			if (connect.SendPackage(strSend,Server->m_strIP,Server->m_strPort,0))
 			{
 				Server->m_ServerLock.Lock();
-				SLZData data = CDealData::GetInstance()->m_DoneList.RemoveHead();
+				CDealData::GetInstance()->m_DoneList.RemoveHead();
 				Server->m_ServerLock.Unlock();
-			}			
+				Server->WriteLogWithTime(_T("发送到下级成功:")+strSend);
+			}
+			else{Server->WriteLogWithTime(_T("发送到下级失败"));}
 		}
 	}
 	return 0;
-}
+ }
+ 
+ */
 
 DWORD WINAPI CTcpSever::AcceptThread(LPVOID lpParam)
 {
@@ -170,7 +180,7 @@ DWORD WINAPI CTcpSever::AcceptThread(LPVOID lpParam)
 				{
 					CString strRecv;
 					CCommonConvert::CharToCstring(strRecv,buf);
-					Server->WriteLogWithTime(_T("recv:")+strRecv);
+					Server->WriteLogWithTime(_T("从上级接收到 recv:")+strRecv);
 					SLZData data = Server->Dodata(buf);
 					Server->m_ServerLock.Lock();
 					CDealData::GetInstance()->AddData(data);

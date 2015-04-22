@@ -3,11 +3,14 @@
 #include "afxwin.h"
 // CComSetDlg ¶Ô»°¿ò
 #define WM_MY_TRAYICON (WM_USER+100)
-class CTcpSever;
+
+
 class CSoundPlay;
 class CComInit;
 class CShortMsgModem;
 class CDealData;
+class CSelectSocketServer;
+
 //class CDoComInOut;
 class CComSetDlg : public CDialog
 {
@@ -52,9 +55,11 @@ public:
 	CComboBox m_combo_MsgCom;
 	CComboBox m_combo_WndCom;
 	CString m_strShortMsg;
-
 	CString m_strCallerAdd1;
 	CString m_strCallerAdd2;
+
+	CString m_strWnd2Add;
+	CEdit m_ed_wndAdd2;
 private:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnClose();
@@ -64,7 +69,8 @@ private:
 	BOOL TaskBarDeleteIcon(HWND hwnd, UINT uID);
 	void RemoveTrayIcon();
 	void LoadInfo();
-	CTcpSever* m_pSever;
+//	CTcpSever* m_pSever;
+	CSelectSocketServer* m_pSever;
 	CSoundPlay* m_pPlaySound;
 	//CDoComInOut* m_pComInOut;
 	CDealData* m_pDealData;
@@ -77,4 +83,7 @@ public:
 	afx_msg void OnQuit();
 	afx_msg void OnCbnSelchangeComboMsgcom();
 	afx_msg void OnCbnSelchangeComboWndcom();
+	virtual BOOL DestroyWindow();
+protected:
+	virtual void OnCancel();
 };

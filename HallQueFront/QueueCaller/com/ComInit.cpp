@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "ComInit.h"
-#include "../DoFile.h"
+#include "../../HallQueFront/DoFile.h"
 
 CComInit::CComInit(void) :
 m_hComReadCard(INVALID_HANDLE_VALUE)
@@ -56,7 +56,7 @@ void CComInit::InitCom()
 {
 	CDoFile dofile;
 	m_strPath = dofile.GetExeFullFilePath();
-	m_strPath += _T("\\cominfo.ini");
+	m_strPath += _T("\\config\\CallerSet.ini");
 }
 /*
 ´ò¿ª´®¿Ú
@@ -204,7 +204,7 @@ CString CComInit::GetWndComm()
 {
 	wchar_t wbuf[255];
 	ZeroMemory(wbuf,255);
-	GetPrivateProfileString(_T("com"),_T("WNDCOM"),NULL,wbuf,255,m_strPath);
+	GetPrivateProfileString(_T("CompSet"),_T("CallerCom"),NULL,wbuf,255,m_strPath);
 	m_cWndComm.Format(_T("%s"),wbuf);
 	return m_cWndComm; 
 }
@@ -213,7 +213,7 @@ CString CComInit::GetMsgComm()
 {
 	wchar_t wbuf[255];
 	ZeroMemory(wbuf,255);
-	GetPrivateProfileString(_T("com"),_T("MSGCOM"),NULL,wbuf,255,m_strPath);
+	GetPrivateProfileString(_T("CompSet"),_T("MsgCom"),NULL,wbuf,255,m_strPath);
 	m_cMsgComm.Format(_T("%s"),wbuf);
 	return m_cMsgComm; 
 }

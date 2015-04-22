@@ -1,10 +1,11 @@
 #include "StdAfx.h"
 #include "SelectSocketServer.h"
-//#include "DbaConfig.h"
 #include "..\HallQueFront\DoFile.h"
-//#include "HallQueFrontServer.h"
 #include "../HallQueFront/WriteLogError.h"
-#include "../HallQueFront/ComputeFuncationTime.h"
+#include "DealPacket.h"
+#include "DealData.h"
+#include "SLZData.h"
+#include "QueueCaller.h"
 
 CSelectSocketServer* pServer;
 extern void MyWriteConsole(CString str);
@@ -12,8 +13,9 @@ CSelectSocketServer::CSelectSocketServer(void)
 : m_iTotalConn(0)
 ,m_hAcceptThreadHandle(INVALID_HANDLE_VALUE)
 ,m_hWorhThreadHandle(INVALID_HANDLE_VALUE)
+,m_uListenPort(6000)
 {
-	/*m_pDealData = CDealData::GetInstance();*/
+	m_pDealData = CDealData::GetInstance();
 	pServer = this;
 }
 
@@ -35,7 +37,7 @@ CSelectSocketServer::~CSelectSocketServer(void)
 		m_ListeningSocket = INVALID_SOCKET;  
 	}  
 	WSACleanup(); 
-	//SaveListenPort();
+//	SaveListenPort();
 }
 
 BOOL CSelectSocketServer::InitServer()
@@ -63,11 +65,6 @@ BOOL CSelectSocketServer::InitServer()
 	}  
 	//构建本地地址信息  
 	addr_Server.sin_family = AF_INET; //地址家族  
-	//USHORT port = GetListenPort();
-	//if(port > 0)
-	//{
-	//	m_uListenPort = port;
-	//}
 	//注意转化为网络字节序
 	addr_Server.sin_port = htons(m_uListenPort);  
 	//使用INADDR_ANY 指示任意地址 
@@ -99,26 +96,26 @@ BOOL CSelectSocketServer::InitServer()
 	return TRUE;
 }
 
-//USHORT CSelectSocketServer::GetListenPort()
-//{
-//	CDbaConfig m_dbaConfig;
-//	CString port = m_dbaConfig.GetServerPort();
-//	int  iPort = 0;
-//	m_convert.CStringToint(iPort,port);
-//	return iPort;
-//}
+// USHORT CSelectSocketServer::GetListenPort()
+// {
+// 	CDbaConfig m_dbaConfig;
+// 	CString port = m_dbaConfig.GetServerPort();
+// 	int  iPort = 0;
+// 	m_convert.CStringToint(iPort,port);
+// 	return iPort;
+// }
 
-//BOOL CSelectSocketServer::SaveListenPort()
-//{
-//	CString strPath=m_convert.GetExeFullFilePath();
-//	CDoFile dofile;
-//	CString port;
-//	m_convert.intToCString(m_uListenPort,port);
-//	strPath+=_T("\\Port");
-//	dofile.CreateMyDirectory(strPath);
-//	strPath+=_T("\\ServerPort.ini");
-//	return WritePrivateProfileString(_T("port"),_T("PORT"),port,strPath);
-//}
+// BOOL CSelectSocketServer::SaveListenPort()
+// {
+// 	CString strPath=m_convert.GetExeFullFilePath();
+// 	CDoFile dofile;
+// 	CString port;
+// 	m_convert.intToCString(m_uListenPort,port);
+// 	strPath+=_T("\\Port");
+// 	dofile.CreateMyDirectory(strPath);
+// 	strPath+=_T("\\ServerPort.ini");
+// 	return WritePrivateProfileString(_T("port"),_T("PORT"),port,strPath);
+// }
 
 DWORD WINAPI CSelectSocketServer::AcceptThread(LPVOID lpParam)
 {
@@ -198,10 +195,10 @@ DWORD WINAPI CSelectSocketServer::WorkerThread(LPVOID lpParam)
 				否则，返回假（0）*/
 				if(FD_ISSET(pThis->m_CliSocketArr[i],&fdread))//检测
 				{
-#ifdef _DEBUG
-					CComputeFuncationTime time;
-					time.SetStartTime(clock());
-#endif
+// #ifdef _DEBUG
+// 					CComputeFuncationTime time;
+// 					time.SetStartTime(clock());
+// #endif
 					//接收
 					ret = recv(pThis->m_CliSocketArr[i], szMessage, MAX_BUFFER, 0);
 					if (ret == 0 || (ret == SOCKET_ERROR))
@@ -214,44 +211,44 @@ DWORD WINAPI CSelectSocketServer::WorkerThread(LPVOID lpParam)
 #ifdef _DEBUG
 						CString msg;
 						pThis->m_convert.CharToCstring(msg,szMessage);
-						MyWriteConsole(msg);
+						MyWriteConsole(_T("从上级接收到消息:") + msg);
 #endif
 						std::string recvPacket(szMessage);
-					/*	std::string retPacket = pThis->DealMsg(recvPacket);*/
+						std::string retPacket = pThis->DealMsg(recvPacket);
 #ifdef _DEBUG
-					/*	CString wRetPacket(retPacket.c_str());
-						MyWriteConsole(wRetPacket);*/
+						CString wRetPacket(retPacket.c_str());
+						MyWriteConsole(_T("返回消息:") + wRetPacket);
 #endif
-						/*int size = retPacket.size();*/
+						int size = retPacket.size();
 						int nTimeOut=1000;
 						int actSendSize = 0;
 						setsockopt(pThis->m_CliSocketArr[i],SOL_SOCKET,SO_RCVTIMEO,(char *)&nTimeOut,sizeof(UINT));
 						while(true)
 						{
-						/*	int tempSize = send(pThis->m_CliSocketArr[i], retPacket.c_str(), size, 0);*/
-							//if(tempSize == SOCKET_ERROR)
-							//{
-							//	pThis->DeleteClient(i);
-							//	CWriteLogError log;
-							//	CString str;
-							//	str.Format(_T("send errcode:%d client num:%d"),WSAGetLastError(),i);
-							//	log.WriteErrLog(str);
-							//	break;
-							//}
-							//else
-							//{
-							//	/*actSendSize += tempSize;
-							//	if(actSendSize == size)break;*/
-							//}
+							int tempSize = send(pThis->m_CliSocketArr[i], retPacket.c_str(), size, 0);
+							if(tempSize == SOCKET_ERROR)
+							{
+								pThis->DeleteClient(i);
+								CWriteLogError log;
+								CString str;
+								str.Format(_T("send errcode:%d client num:%d"),WSAGetLastError(),i);
+								log.WriteErrLog(str);
+								break;
+							}
+							else
+							{
+								actSendSize += tempSize;
+								if(actSendSize == size)break;
+							}
 						}
 					}
-#ifdef _DEBUG
-					time.SetFinshTime(clock());
-					double dura = time.GetDuration();
-					CString strDuration;
-					strDuration.Format(_T("dealtime:%f"),dura);
-					MyWriteConsole(strDuration);
-#endif
+// #ifdef _DEBUG
+// 					time.SetFinshTime(clock());
+// 					double dura = time.GetDuration();
+// 					CString strDuration;
+// 					strDuration.Format(_T("dealtime:%f"),dura);
+// 					MyWriteConsole(strDuration);
+// #endif
 				}
 				else
 				{
@@ -267,48 +264,34 @@ DWORD WINAPI CSelectSocketServer::WorkerThread(LPVOID lpParam)
 	return 0;
 }
 
-//std::string CSelectSocketServer::DealMsg(const std::string recvPacket)
-//{
-//	///判断报文
-//	CProducePacket producePacket;
-//	int iErrCode = producePacket.JudgeSendPacket(recvPacket);
-//	switch(iErrCode)
-//	{
-//	case 1:
-//	case 26:
-//	case 27:
-//	case 28:
-//	case 32:
-//	case 33:
-//	case 34:
-//	case 35:
-//		m_pDealData->AddPacket(recvPacket);
-//		break;
-//	}
-//	//返回报文
-//	std::string retPacket;
-//	retPacket = producePacket.ProduceSendRet(iErrCode,recvPacket);
-//	return retPacket;
-//}
-//
-//void CSelectSocketServer::DeleteClient(int i)
-//{
-//	closesocket(m_CliSocketArr[i]);
-//#ifdef _DEBUG
-//	CString str;
-//	str.Format(_T("%d client"),m_iTotalConn);
-//	MyWriteConsole(str);
-//#endif
-//	if(i == m_iTotalConn-1)//删除最后一个
-//	{
-//		m_iTotalConn--;
-//		m_CliSocketArr[i]=0;
-//	}
-//	else if(i < m_iTotalConn-1)      
-//	{     
-//		m_CliSocketArr[i--] = m_CliSocketArr[--m_iTotalConn];     
-//	}
-//}
+std::string CSelectSocketServer::DealMsg(const std::string recvPacket)
+{
+	SLZData data;
+	BOOL flag = CDealPacket::AnaSendPacket(recvPacket,&data);//分析发送过来的数据
+	CDealData* pDealData = CDealData::GetInstance();
+	pDealData->AddData(data);//加入到等待队列
+	///生成返回数据
+	return CDealPacket::ProduceRetPacket(flag);
+}
+
+void CSelectSocketServer::DeleteClient(int i)
+{
+	closesocket(m_CliSocketArr[i]);
+#ifdef _DEBUG
+	CString str;
+	str.Format(_T("%d client"),m_iTotalConn);
+	MyWriteConsole(str);
+#endif
+	if(i == m_iTotalConn-1)//删除最后一个
+	{
+		m_iTotalConn--;
+		m_CliSocketArr[i]=0;
+	}
+	else if(i < m_iTotalConn-1)      
+	{     
+		m_CliSocketArr[i--] = m_CliSocketArr[--m_iTotalConn];     
+	}
+}
 
 int CALLBACK CSelectSocketServer::ConditionFunc(LPWSABUF lpCallerId,LPWSABUF lpCallerData, LPQOS lpSQOS,LPQOS lpGQOS,LPWSABUF lpCalleeId, LPWSABUF lpCalleeData,GROUP FAR * g,DWORD dwCallbackData) 
 {  

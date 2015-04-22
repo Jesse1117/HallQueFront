@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DoFile.h"
+#include "../HallQueFront/DoFile.h"
 #include "CommonConvert.h"
 CDoFile::CDoFile(void)
 {

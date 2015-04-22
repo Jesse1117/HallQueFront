@@ -5,8 +5,19 @@
 #include "QueueCaller.h"
 #include "QueueCallerDlg.h"
 #include "ComSetDlg.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
+
+//#pragma comment(lib,"C:/Program Files/Visual Leak Detector/lib/Win32/vld.lib")
+//#include "C:\Program Files\Visual Leak Detector\include\vld.h"
+
+HANDLE g_hStdOutput;
+void MyWriteConsole(CString str)
+{
+	::WriteConsole(g_hStdOutput, str, str.GetLength(), NULL, NULL);
+	::WriteConsole(g_hStdOutput, "\n", 1, NULL, NULL);
+}
 #endif
 
 
@@ -35,6 +46,10 @@ CQueueCallerApp theApp;
 
 BOOL CQueueCallerApp::InitInstance()
 {
+#ifdef _DEBUG
+	::AllocConsole();
+	g_hStdOutput = ::GetStdHandle(STD_OUTPUT_HANDLE);
+#endif
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
 	// 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
 	//则需要 InitCommonControlsEx()。否则，将无法创建窗口。

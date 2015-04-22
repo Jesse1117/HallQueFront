@@ -6,6 +6,8 @@
 #include "com/SLZCWndScreen.h"
 #pragma comment(lib, "WINMM.LIB")
 CSoundPlay::CSoundPlay(void):m_pPlayVoiceThread(NULL)
+,m_iScreenId(0)
+,m_iScreenId2(0)
 {
 	m_strWavLibPath = CommonStrMethod::GetModuleDir() + _T("wavLib\\");
 	m_strCallPath = CommonStrMethod::GetModuleDir();
@@ -67,6 +69,10 @@ BOOL CSoundPlay::Init()
 	CString strWndId(wbuf);
 	m_iScreenId = CommonStrMethod::Str2Int(strWndId);
 	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("WndId2"),NULL,wbuf,255,m_strCallPath);
+	CString strWndId2(wbuf);
+	m_iScreenId2 = CommonStrMethod::Str2Int(strWndId2);
+	ZeroMemory(wbuf,255);
 	GetPrivateProfileString(_T("CompSet"),_T("PlayTimes"),NULL,wbuf,255,m_strCallPath);
 	CString strPlaytimes(wbuf);
 	m_iPlayTimes = CommonStrMethod::Str2Int(strPlaytimes);
@@ -74,7 +80,7 @@ BOOL CSoundPlay::Init()
 	return TRUE;
 }
 
-BOOL CSoundPlay::DataPlay(const SLZData& Data,BOOL bWait)
+BOOL CSoundPlay::DataPlay(SLZData Data,BOOL bWait)
 {
 	VOICEDISPLAYSTR vst = {0};
 		if (bWait)
@@ -88,8 +94,15 @@ BOOL CSoundPlay::DataPlay(const SLZData& Data,BOOL bWait)
 			vst.strDisplayStr = ChangeShowStr(Data);
 		}
 		/////获取不同屏幕地址////
+		if(Data.GetWindowId() == 1)
+		{
+			vst.iWndScreenId = m_iScreenId;
+		}
+		if(Data.GetWindowId() == 2)
+		{
+			vst.iWndScreenId = m_iScreenId2;
+		}
 
-		vst.iWndScreenId = m_iScreenId;
 		AddPlayText(vst);				//加入播放队列
 		return TRUE;
 }
@@ -135,7 +148,8 @@ UINT CSoundPlay::PlayVoiceThread(LPVOID pParam)
 				if (PlayStr.iWndScreenId!=0)
 				{
 					SLZCWndScreen* WndScreen = SLZCWndScreen::GetInstance();
-					WndScreen->AddScreenMsg(PlayStr.strDisplayStr,PlayStr.iWndScreenId);
+					/*WndScreen->AddScreenMsg(PlayStr.strDisplayStr,PlayStr.iWndScreenId);*/
+					WndScreen->mAddScreenMsg(PlayStr.strDisplayStr,PlayStr.iWndScreenId);
 				}
 				//if (PlayStr.iLEDPhyId!=0&&PlayStr.iLEDPipeId!=0)
 				//{

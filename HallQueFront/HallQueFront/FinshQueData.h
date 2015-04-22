@@ -26,6 +26,11 @@ private:
 	void ReleaseListShorMsg();
 	BOOL ReadJudgeShortMsg();
 	BOOL SendMsgToPhone(const SLZData& data);
+
+	void WriteErrLog(CString strErr);
+	void WriteLogWithTime(CString strSockLog);			//写入错误日志
+	BOOL AppendWriteFile(CString strText, CString strFileName);
+	CString m_strLogFilePath;
 public:
 	BOOL ReFlushListShortMsg();//接口刷新出现差评发送短信的队列
 };

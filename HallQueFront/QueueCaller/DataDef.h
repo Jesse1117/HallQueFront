@@ -6,13 +6,13 @@
 #define MYBUFLEN 256
 #define DATABUFLEN 1024
 
-typedef enum _tagSendDataType
-{
-	getNumData = 0,//取号数据
-	callNumData = 1,//呼叫数据
-	discardNumData = 2,//过号数据
-	evateNumData = 3   //评价数据(完成数据)
-}SendDataType;
+// typedef enum _tagSendDataType
+// {
+// 	getNumData = 0,//取号数据
+// 	callNumData = 1,//呼叫数据
+// 	discardNumData = 2,//过号数据
+// 	evateNumData = 3   //评价数据(完成数据)
+// }SendDataType;
 
 typedef enum _tagCmdType
 {

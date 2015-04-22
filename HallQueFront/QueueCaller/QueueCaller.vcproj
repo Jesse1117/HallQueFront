@@ -216,15 +216,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ComplSocketClient.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ComSetDlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\CreatePacket.cpp"
+				RelativePath=".\DealData.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\DealData.cpp"
+				RelativePath=".\DealPacket.cpp"
 				>
 			</File>
 			<File
@@ -245,6 +249,10 @@
 			</File>
 			<File
 				RelativePath=".\QueueCaller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectSocketServer.cpp"
 				>
 			</File>
 			<File
@@ -292,15 +300,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\TCPConnect.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpSever.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\UserInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\WriteLogError.cpp"
 				>
 			</File>
 		</Filter>
@@ -342,11 +346,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ComSetDlg.h"
+				RelativePath=".\ComplSocketClient.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CreatePacket.h"
+				RelativePath=".\ComSetDlg.h"
 				>
 			</File>
 			<File
@@ -358,11 +362,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\com\DoComInOut.h"
+				RelativePath=".\DealPacket.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DoFile.h"
+				RelativePath=".\com\DoComInOut.h"
 				>
 			</File>
 			<File
@@ -383,6 +387,10 @@
 			</File>
 			<File
 				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectSocketServer.h"
 				>
 			</File>
 			<File
@@ -419,14 +427,6 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TCPConnect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TcpSever.h"
 				>
 			</File>
 			<File

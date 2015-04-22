@@ -8,11 +8,11 @@
 #include "CallJttsSetDlg.h"
 #include "ShowMsgSetDlg.h"
 #include "CommonStrMethod.h"
-#include "TcpSever.h"
 #include "SoundPlay.h"
 #include "com/ComInit.h"
 #include "ShortMsgModem.h"
 #include "DealData.h"
+#include "SelectSocketServer.h"
 // CComSetDlg 对话框
 
 IMPLEMENT_DYNAMIC(CComSetDlg, CDialog)
@@ -22,7 +22,7 @@ CComSetDlg::CComSetDlg(CWnd* pParent /*=NULL*/)
 {
 	m_pPlaySound = CSoundPlay::GetInstance();
 	//m_pComInOut = CDoComInOut::GetInstance();
-	m_pSever = new CTcpSever();
+//	m_pSever = new CTcpSever();
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_strCallPath = CommonStrMethod::GetModuleDir();
 	m_strCallPath+=_T("\\config");
@@ -30,7 +30,10 @@ CComSetDlg::CComSetDlg(CWnd* pParent /*=NULL*/)
 	m_strCallPath+=_T("\\CallerSet.ini");
 	m_pShortMsg = CShortMsgModem::GetInstance();
 	m_pComInit = CComInit::GetInstance();
+	
 	m_pDealData = CDealData::GetInstance();
+
+	m_pSever = new CSelectSocketServer;
 }
 
 CComSetDlg::~CComSetDlg()
@@ -58,6 +61,7 @@ void CComSetDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX,IDC_EDIT_BUSS1,m_strEditBuss1);
 	DDX_Text(pDX,IDC_EDIT_BUSS2,m_strEditBuss2);
 	DDX_Text(pDX,IDC_EDIT_CALLWAITTIME,m_strCallWaitTime);
+	DDX_Control(pDX,IDC_EDIT_WNDID2,m_ed_wndAdd2);
 }
 
 
@@ -87,10 +91,20 @@ BOOL CComSetDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 	AddTrayIcon();
-	m_pSever->Start();
+
+
+	m_pSever->InitServer();
 	m_pPlaySound->Init();
-	//m_pComInOut->Start();
 	m_pDealData->Start();
+
+	CString strComWnd = m_pComInit->GetWndComm();
+	m_combo_WndCom.SelectString(0,m_pComInit->GetWndComm());
+
+	CString strShortMsgCom = m_pComInit->GetMsgComm();
+	m_combo_MsgCom.SelectString(0,m_pComInit->GetMsgComm());
+	
+
+
 	SetTimer(11,10,NULL);
 	return TRUE;
 }
@@ -231,6 +245,13 @@ void CComSetDlg::LoadInfo()
 	GetPrivateProfileString(_T("CompSet"),_T("CallWaitTime"),NULL,wbuf,255,m_strCallPath);
 	CString strwait(wbuf);
 	m_strCallWaitTime = strwait;
+
+	ZeroMemory(wbuf,255);
+	GetPrivateProfileString(_T("CompSet"),_T("WndId2"),NULL,wbuf,255,m_strCallPath);
+	CString strWndId2(wbuf);
+	m_strWnd2Add = strWndId2;
+	m_ed_wndAdd2.SetWindowText(strWndId2);
+
 	UpdateData(FALSE);
 }
 
@@ -266,6 +287,11 @@ void CComSetDlg::OnBnClickedOk()
 	WritePrivateProfileString(_T("CompSet"),_T("Buss1"),m_strEditBuss1,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("Buss2"),m_strEditBuss2,m_strCallPath);
 	WritePrivateProfileString(_T("CompSet"),_T("CallWaitTime"),m_strCallWaitTime,m_strCallPath);
+
+	CString wndAdd2;
+	m_ed_wndAdd2.GetWindowText(wndAdd2);
+	WritePrivateProfileString(_T("CompSet"),_T("WndId2"),wndAdd2,m_strCallPath);
+
 	ShowWindow(SW_HIDE);
 }
 
@@ -412,7 +438,6 @@ void CComSetDlg::OnQuit()
 	// TODO: 在此添加命令处理程序代码
 	if(IDOK==MessageBox(_T("确定退出吗?"),_T("警告"),MB_OKCANCEL | MB_ICONINFORMATION))
 	{
-		RemoveTrayIcon();
 		DestroyWindow();
 	}
 }
@@ -467,4 +492,18 @@ void CComSetDlg::OnCbnSelchangeComboWndcom()
 		m_combo_WndCom.SetCurSel(0);		
 		MessageBox(_T("呼叫器串口打开失败或被占用"),_T("注意"),MB_OK|MB_ICONINFORMATION);
 	}
+}
+
+BOOL CComSetDlg::DestroyWindow()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	RemoveTrayIcon();
+	return CDialog::DestroyWindow();
+}
+
+void CComSetDlg::OnCancel()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+//	CDialog::OnCancel();
 }

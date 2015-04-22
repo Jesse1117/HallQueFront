@@ -9,7 +9,8 @@
 
 #include "resource.h"		// 主符号
 
-
+#include <list>
+using namespace std;
 // CQueueCallerApp:
 // 有关此类的实现，请参阅 QueueCaller.cpp
 //
@@ -26,6 +27,8 @@ public:
 // 实现
 
 	DECLARE_MESSAGE_MAP()
+public:
+	list<CString> m_list_caCheMsg;//数据缓存cache
 };
 
 extern CQueueCallerApp theApp;

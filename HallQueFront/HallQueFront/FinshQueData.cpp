@@ -7,6 +7,7 @@
 #include "ShortMsgModem.h"
 #include "CreatePacket.h"
 #include "DoFile.h"
+#include "CommonStrMethod.h"
 
 CFinshQueData::CFinshQueData(void) : m_pDoFinshedDataThread(NULL)
 {
@@ -14,6 +15,7 @@ CFinshQueData::CFinshQueData(void) : m_pDoFinshedDataThread(NULL)
 	m_filePath = doFile.GetExeFullFilePath();
 	m_filePath += _T("\\JudgeShortMsg");
 	m_filePath += _T("\\JudgeShortMsg.dat");
+	m_strLogFilePath = CommonStrMethod::GetModuleDir() + _T("log/");
 	ReadJudgeShortMsg();
 	Start();
 }
@@ -94,6 +96,11 @@ BOOL CFinshQueData::GetFinshedData()
 		std::string recvMsg;
 		int actRecvSize = 0;
 		flag = client.SendData(sendmsg,recvMsg,actRecvSize); 
+		if (flag)
+		{
+			WriteLogWithTime(_T("send:")+sendmsg);
+		}
+		else WriteErrLog(_T("发送到下一级失败"));
 	}
 	
 	///////////出现差评时发送短信到手机//////////////
@@ -200,4 +207,47 @@ BOOL CFinshQueData::SendMsgToPhone(const SLZData& data)
 		flag = pMsgModem->SendMsg(pMsg->GetPhoneNum(),strShortMsg);
 	}
 	return flag;
+}
+
+void CFinshQueData::WriteErrLog(CString strSockLog)
+{
+	CString str = _T("Error: ") + strSockLog;
+	WriteLogWithTime(str);
+}
+
+void CFinshQueData::WriteLogWithTime(CString strSockLog)
+{
+	CTime time = CTime::GetCurrentTime();
+	CString str = time.Format(_T("%Y-%m-%d %H:%M:%S")) + _T("  \t") + strSockLog + _T("\r\n\r\n");
+	CString strLogFile = time.Format(_T("log_%Y%m%d.log"));
+	if(!CommonStrMethod::PathFileExist(m_strLogFilePath))
+	{
+		if(!CommonStrMethod::CreatePath(m_strLogFilePath))
+		{
+			return;
+		}
+	}
+	AppendWriteFile(str, m_strLogFilePath + strLogFile);
+}
+
+BOOL CFinshQueData::AppendWriteFile(CString strText, CString strFileName)
+{
+	CFile file;
+	if(!file.Open(strFileName, 
+		CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite))
+	{
+		//CString str;
+		//str.Format(_T("创建或打开日志文件失败,您所使用的计算机帐号没有相应的磁盘写权限:\r\n\t%s"), g_pControl->m_strLogFilePath);
+		//AfxMessageBox(str);
+		return FALSE;
+	}
+	CHAR* szBuf = (CHAR*)malloc(strText.GetLength()*2 + 1);
+	memset(szBuf, 0, strText.GetLength()*2 + 1);
+	CommonStrMethod::WChar2Char(szBuf, 
+		strText.GetLength()*2 + 1, strText.GetBuffer());
+	file.SeekToEnd();
+	file.Write(szBuf, strlen(szBuf));
+	file.Close();
+
+	return TRUE;
 }
