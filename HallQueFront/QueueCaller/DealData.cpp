@@ -133,7 +133,13 @@ void CALLBACK CDealData::MyDoOutTimerMsg(HWND hwnd, UINT uMsg, UINT idEvent, DWO
 		CTimeSpan tWaitTime(0,0,data.GetWaitTime(),0);//几分钟
 		if (currenttime - recvtime >= tWaitTime)//加入正在处理队列
 		{
-			
+#ifdef _DEBUG
+			CString strMsg = _T("MyDoOutTimerMsg: 时间到加入处理队列");
+			MyWriteConsole(strMsg);
+			CString strData;
+			strData.Format(_T("接收到的data为:%s\n"),data.GetSerialId());
+			MyWriteConsole(strData);
+#endif
 				dealdata->m_mtList1Lock.Lock();
 				dealdata->m_DataList1.AddTail(data);
 				dealdata->m_mtList1Lock.Unlock();
@@ -141,7 +147,17 @@ void CALLBACK CDealData::MyDoOutTimerMsg(HWND hwnd, UINT uMsg, UINT idEvent, DWO
 				///发声
 				SLZCallerData callerdata;
 				callerdata.SetCmdType(callerCmdShowAlarm);
-				callerdata.SetCallerId(data.GetWindowId());
+				
+				SecWndInfo wndinfo;
+				map<CString,SecWndInfo>::const_iterator itera 
+				 =  theApp.m_map_secwndinfo.find(data.GetBussName());
+
+				if(itera != theApp.m_map_secwndinfo.end())
+				{
+					wndinfo = itera->second;
+				}
+
+				callerdata.SetCallerId(wndinfo.nCallerid);
 				SLZCCaller::GetInstance()->AddWriteCallerData(callerdata);
 
 				CString strWaitNum = CommonStrMethod::Int2Str(dealdata->m_DataList1.GetCount());
@@ -172,6 +188,18 @@ DWORD WINAPI CDealData::SendToNext(LPVOID pParam)
 			data.SetWaitTime(pThis->m_iWaitTime);
 			
 			string aSendPacket = CDealPacket::ProduceSendPacket(&data);
+#ifdef _DEBUG
+			CString wSendPacket(aSendPacket.c_str());
+			MyWriteConsole(_T("发往第三级消息:") + wSendPacket);
+			MyWriteConsole(_T("\n"));
+#endif
+		
+			if(pThis->m_strNextIP.IsEmpty())
+			{
+				Sleep(10);
+				continue;
+			}
+
 			CComplSocketClient client;
 			client.SetRemoteIp(pThis->m_strNextIP);
 			int nPort = 6000;
@@ -187,7 +215,7 @@ DWORD WINAPI CDealData::SendToNext(LPVOID pParam)
 			}
 #ifdef _DEBUG
 			CString wRecvMsg(recvMsg.c_str());
-			MyWriteConsole(_T("返回消息:") + wRecvMsg);
+			MyWriteConsole(_T("发往第三级返回消息:") + wRecvMsg);
 #endif
 		}
 	}

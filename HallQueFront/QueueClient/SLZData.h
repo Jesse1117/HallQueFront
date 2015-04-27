@@ -246,6 +246,17 @@ public:
 	{
 		m_bIsSendPhone = flag;
 	}
+	/////正在呼叫中
+	void SetIsCalling(BOOL flag)
+	{
+		m_bIsCalling = flag;
+	}
+
+	BOOL GetIsCalling() const{ return m_bIsCalling;}
+	//////////////正在呼叫的呼叫器地址
+	int GetCallingAdd()const {return m_nCallingAdd;}
+	void SetCallingAdd(int callingAdd){m_nCallingAdd = callingAdd;}
+	
 
 	void SetRecvTime(const CTime recvtime) {m_timeRecv = recvtime;}
 	virtual void Serialize( CArchive& ar );//支持序列化
@@ -278,6 +289,8 @@ private:
 	UINT m_iWaitTime;  //延时时间
 	CTime m_timeRecv; //接收时间
 	BOOL m_bIsSendPhone;
+	BOOL m_bIsCalling;//正在呼叫中
+	int m_nCallingAdd;//正在呼叫的呼叫器地址
 private:
 	int GetSrand(const int &max);
 	CString GetOnlyId();//取号唯一ID

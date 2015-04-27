@@ -5,7 +5,7 @@
 #include "DealPacket.h"
 #include "DealData.h"
 #include "SLZData.h"
-#include "QueueCaller.h"
+#include "QueueClient.h"
 
 CSelectSocketServer* pServer;
 extern void MyWriteConsole(CString str);
@@ -270,7 +270,7 @@ std::string CSelectSocketServer::DealMsg(const std::string recvPacket)
 	BOOL flag = CDealPacket::AnaSendPacket(recvPacket,&data);//分析发送过来的数据
 	CDealData* pDealData = CDealData::GetInstance();
 	
-	pDealData->AddData(data);//加入到等待队列
+	pDealData->AddWaitListData(data);//加入到等待队列
 	///生成返回数据
 	return CDealPacket::ProduceRetPacket(flag);
 }

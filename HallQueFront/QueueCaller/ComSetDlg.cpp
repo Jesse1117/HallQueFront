@@ -251,7 +251,27 @@ void CComSetDlg::LoadInfo()
 	CString strWndId2(wbuf);
 	m_strWnd2Add = strWndId2;
 	m_ed_wndAdd2.SetWindowText(strWndId2);
+	
+	SecWndInfo wndInfo1;
+	int nWndId1 = 0;
+	int nCallerId1 = 0;
+	CCommonConvert::CStringToint(nWndId1,strWndId);
+	CCommonConvert::CStringToint(nCallerId1,strCallerAdd1);
+	wndInfo1.nWndid = nWndId1;
+	wndInfo1.nCallerid = nCallerId1;
 
+
+	SecWndInfo wndInfo2;
+	int nWndId2 = 0;
+	int nCallerId2 = 0;
+	CCommonConvert::CStringToint(nWndId2,strWndId2);
+	CCommonConvert::CStringToint(nCallerId2,strCallerAdd2);
+	wndInfo2.nWndid = nWndId1;
+	wndInfo2.nCallerid = nCallerId2;
+
+	
+	theApp.m_map_secwndinfo[strBuss1] = wndInfo1;
+	theApp.m_map_secwndinfo[strBuss2] = wndInfo2;
 	UpdateData(FALSE);
 }
 
@@ -291,8 +311,31 @@ void CComSetDlg::OnBnClickedOk()
 	CString wndAdd2;
 	m_ed_wndAdd2.GetWindowText(wndAdd2);
 	WritePrivateProfileString(_T("CompSet"),_T("WndId2"),wndAdd2,m_strCallPath);
+	m_strWnd2Add = wndAdd2;
 
 	ShowWindow(SW_HIDE);
+
+	////////////////////////////////////////////////
+	SecWndInfo wndInfo1;
+	int nWndId1 = 0;
+	int nCallerId1 = 0;
+	CCommonConvert::CStringToint(nWndId1,m_strWndId);
+	CCommonConvert::CStringToint(nCallerId1,m_strCallerAdd1);
+	wndInfo1.nWndid = nWndId1;
+	wndInfo1.nCallerid = nCallerId1;
+
+
+	SecWndInfo wndInfo2;
+	int nWndId2 = 0;
+	int nCallerId2 = 0;
+	CCommonConvert::CStringToint(nWndId2,m_strWnd2Add);
+	CCommonConvert::CStringToint(nCallerId2,m_strCallerAdd2);
+	wndInfo2.nWndid = nWndId1;
+	wndInfo2.nCallerid = nCallerId2;
+
+
+	theApp.m_map_secwndinfo[m_strEditBuss1] = wndInfo1;
+	theApp.m_map_secwndinfo[m_strEditBuss2] = wndInfo2;
 }
 
 void CComSetDlg::OnClose()

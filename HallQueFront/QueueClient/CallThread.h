@@ -34,15 +34,16 @@ private:
 
 private:
 	CDealData* m_pDealData;
-	CList<SLZData> m_CallingList; // 正在呼叫队列
-	UINT m_CallerAdd1;
-	UINT m_CallerAdd2;
-	CString m_strBuss1;
-	CString m_strBuss2;
+//	CList<SLZData> m_CallingList; // 正在呼叫队列
+//	UINT m_CallerAdd1;
+//	UINT m_CallerAdd2;
+//	CString m_strBuss1;
+//	CString m_strBuss2;
 	int  m_CallWaitTime;   //呼叫等待时间
 	CMutex m_mtCallLock;  //呼叫锁
-	CMutex m_mtCallBackLock;  //回调锁
-	CString m_strCallPath;
+	
+
+//	CString m_strCallPath;
 	BOOL m_bSendMsg;
 	CString m_strSendMsg;   //发送的短信内容
 	void OnLogin(CallerCmd* callerCmd);

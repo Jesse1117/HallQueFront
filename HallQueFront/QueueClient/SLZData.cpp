@@ -12,6 +12,8 @@ SLZData::SLZData(void) : m_iCusLevel(0)
 ,m_iQueNum(0)
 ,m_iWaitTime(0)
 ,m_bIsSendPhone(FALSE)
+,m_bIsCalling(FALSE)
+,m_nCallingAdd(0)
 {
 	m_strSerialId = GetOnlyId();
 }
@@ -46,6 +48,8 @@ SLZData::SLZData(const SLZData& obj)
 	m_iWaitTime = obj.m_iWaitTime;
 	m_timeRecv = obj.m_timeRecv;
 	m_bIsSendPhone = obj.m_bIsSendPhone;
+	m_bIsCalling = obj.m_bIsCalling;
+	m_nCallingAdd = obj.m_bIsCalling;
 }
 
 SLZData& SLZData::operator=(const SLZData& obj)
@@ -75,6 +79,8 @@ SLZData& SLZData::operator=(const SLZData& obj)
 	m_iWaitTime = obj.m_iWaitTime;
 	m_timeRecv = obj.m_timeRecv;
 	m_bIsSendPhone = obj.m_bIsSendPhone;
+	m_bIsCalling = obj.m_bIsCalling;
+	m_nCallingAdd = obj.m_nCallingAdd;
 	return *this;
 }
 
@@ -104,7 +110,7 @@ void SLZData::Serialize(CArchive &ar)
 			<<m_strBussName<<m_strQueueNum<<m_strCardNum<<m_CustName
 			<<m_iCusLevel<<m_timeTakingNum<<m_iWindowId<<m_strStaffId<<m_timeCall<<m_timeFinish
 			<<m_bIsOpenEva<<m_bIsFinshEva<<m_iWindowShowId<<m_queSerialId<<m_iQueNum
-			<<m_strPhoneNum<<m_strMsg<<m_iWaitTime<<m_timeRecv<<m_bIsSendPhone;
+			<<m_strPhoneNum<<m_strMsg<<m_iWaitTime<<m_timeRecv<<m_bIsSendPhone<<m_bIsCalling<<m_nCallingAdd;
 	}
 	else
 	{
@@ -112,6 +118,6 @@ void SLZData::Serialize(CArchive &ar)
 			>>m_strBussName>>m_strQueueNum>>m_strCardNum>>m_CustName
 			>>m_iCusLevel>>m_timeTakingNum>>m_iWindowId>>m_strStaffId>>m_timeCall>>m_timeFinish
 			>>m_bIsOpenEva>>m_bIsFinshEva>>m_iWindowShowId>>m_queSerialId>>m_iQueNum>>m_strPhoneNum
-			>>m_strMsg>>m_iWaitTime>>m_timeRecv>>m_bIsSendPhone;
+			>>m_strMsg>>m_iWaitTime>>m_timeRecv>>m_bIsSendPhone>>m_bIsCalling>>m_nCallingAdd;
 	}
 }

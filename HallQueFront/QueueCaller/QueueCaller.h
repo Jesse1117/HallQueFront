@@ -10,10 +10,16 @@
 #include "resource.h"		// 主符号
 
 #include <list>
+#include <map>
 using namespace std;
 // CQueueCallerApp:
 // 有关此类的实现，请参阅 QueueCaller.cpp
 //
+typedef struct
+{
+	int nCallerid;
+	int nWndid;
+}SecWndInfo;
 
 class CQueueCallerApp : public CWinApp
 {
@@ -28,7 +34,10 @@ public:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	
+
 	list<CString> m_list_caCheMsg;//数据缓存cache
+	map<CString,SecWndInfo> m_map_secwndinfo;
 };
 
 extern CQueueCallerApp theApp;

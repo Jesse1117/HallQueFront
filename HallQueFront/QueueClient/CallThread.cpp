@@ -8,7 +8,9 @@
 #include "SoundPlay.h"
 #include "CommonStrMethod.h"
 #include "ShortMsgModem.h"
-#include "QueueCaller.h"
+#include "QueueClient.h"
+#include "SystemBasicData.h"
+#include "../HallQueFront/CommonConvert.h"
 
 extern void MyWriteConsole(CString str);
 
@@ -25,10 +27,6 @@ CCallThread::CCallThread(void) : m_pCaller(NULL)
 	m_pCallerCmdData = new CCallerCmdData;
 	m_pWndScreen = SLZCWndScreen::GetInstance();
 	m_pDealData = CDealData::GetInstance();
-	m_strCallPath = CommonStrMethod::GetModuleDir();
-	m_strCallPath+=_T("\\config");
-	CommonStrMethod::CreatePath(m_strCallPath);
-	m_strCallPath+=_T("\\CallerSet.ini");
 }
 
 CCallThread::~CCallThread(void)
@@ -39,6 +37,14 @@ CCallThread::~CCallThread(void)
 		delete m_pGetHardCallerCmd;
 		m_pGetHardCallerCmd=NULL;
 	}
+
+	if(m_pDealCallerCmd)
+	{
+		TerminateThread(m_pDealCallerCmd->m_hThread,0);
+		delete m_pDealCallerCmd;
+		m_pDealCallerCmd = NULL;
+	}
+
 	if(m_pCallerCmdData)
 	{
 		delete m_pCallerCmdData;
@@ -203,22 +209,20 @@ void CCallThread::OnCall(CallerCmd* callerCmd)
 {	
 	SLZData data;
 
-	if (m_pDealData->m_DataList1.GetCount()>0)
+	if (m_pDealData->GetDoingDataCount() > 0)
 	{
+		if(!m_pDealData->GetDoingFirstData(callerCmd,data))
+			return;
 		
-		m_mtCallLock.Lock();
-		data = m_pDealData->m_DataList1.GetHead();
-		m_mtCallLock.Unlock();
-		data.SetWindowId(callerCmd->GetCallerAdd());
+//		data.SetWindowId(callerCmd->GetCallerAdd());
 		CSoundPlay::GetInstance()->DataPlay(data);
 		data.SetCallTime(CTime::GetCurrentTime());
-		m_mtCallLock.Lock();
-		if (!m_CallingList.IsEmpty())
-		{
-			m_CallingList.RemoveAll();
-		}
-		m_CallingList.AddTail(data);
-		m_mtCallLock.Unlock(); 
+	
+// 
+// 		m_mtCallLock.Lock();
+// 
+// 		m_CallingList.AddTail(data);
+// 		m_mtCallLock.Unlock(); 
 		
 	}
 	
@@ -229,22 +233,9 @@ void CCallThread::OnCall(CallerCmd* callerCmd)
 			CShortMsgModem::GetInstance()->SendMsg(data.GetPhoneNum(),m_strSendMsg);
 			///设为已经发送
 			data.SetIsHaveSendToPhone(TRUE);
-			//////////////////////////////////////////
-			m_mtCallLock.Lock();
-			POSITION pos = m_pDealData->m_DataList1.GetHeadPosition();
-			POSITION poslast;
-			while(pos)
-			{
-				poslast = pos;
-				SLZData dataTemp = m_pDealData->m_DataList1.GetNext(pos);
-				if(dataTemp.GetSerialId() == data.GetSerialId())
-				{
-					m_pDealData->m_DataList1.SetAt(poslast,data);
-					m_mtCallLock.Unlock();
-					break;
-				}
-			}
-			m_mtCallLock.Unlock();
+
+			//////////////////////////////////////////修改list
+			m_pDealData->ModifyDoingListData(data);
 
 #ifdef _DEBUG
 			CString strMsg;
@@ -252,30 +243,28 @@ void CCallThread::OnCall(CallerCmd* callerCmd)
 			MyWriteConsole(strMsg);
 #endif
 		}
-
-
 	}
+	
+	////////////////////////////////设置为正在呼叫
+	data.SetIsCalling(TRUE);
+	data.SetCallingAdd(callerCmd->GetCallerAdd());
+	m_pDealData->ModifyDoingListData(data);
+
+	SLZData* pData = new SLZData;
+	*pData = data;
+	::PostMessage(theApp.m_pMainWnd->GetSafeHwnd(),WM_SHOWCALLMSG,(WPARAM)pData,NULL);
+	
+	///返回人数
+	int cout = m_pDealData->GetDoingDataCount();
+	CString carriedData = data.GetQueueNumber() + _T(" ");
+	carriedData.AppendFormat(_T("%d"),cout);
+	callerCmd->SetCarriedData(carriedData);
 }
 ///重呼///
 /////////
 void CCallThread::OnRecall(CallerCmd* callerCmd)
 {
-	if (m_CallingList.GetCount()>0)
-	{
-		SLZData data;
-		POSITION pos;
-		for (int i=0;i<m_CallingList.GetCount();i++)
-		{
-			m_mtCallLock.Lock();
-			pos = m_CallingList.FindIndex(i);
-			data = m_CallingList.GetAt(pos);
-			m_mtCallLock.Unlock();
-			if (((data.GetBussName()==m_strBuss1)&& callerCmd->GetCallerAdd()==m_CallerAdd1)||((data.GetBussName()==m_strBuss2)&& callerCmd->GetCallerAdd() == m_CallerAdd2))
-			{
-				CSoundPlay::GetInstance()->DataPlay(data);
-			}
-		}
-	}
+	
 }
 ///过好///
 /////////
@@ -313,48 +302,41 @@ void CCallThread::OnWait(CallerCmd* callerCmd)
 /////////
 void CCallThread::OnEvaReq(CallerCmd* callerCmd)
 {
-	if (callerCmd->GetCallerAdd()==m_CallerAdd1)
+	
+	SLZData data ;
+	if (!m_pDealData->IsEmptyDoingListDat())
 	{
-		m_mtCallLock.Lock();
-		SLZData data ;
-		if (!m_pDealData->m_DataList1.IsEmpty())
-		{
-			data = m_pDealData->m_DataList1.GetHead();
-			m_pDealData->m_DataList1.RemoveHead();
-			CString strWaitNum = CommonStrMethod::Int2Str(m_pDealData->m_DataList1.GetCount());
-			theApp.m_pMainWnd->SetWindowText(_T("呼叫终端--当前等待人数：")+strWaitNum);
-			m_pDealData->m_DoneList.AddTail(data);
-#ifdef _DEBUG
-			CString writeMsg;
-			writeMsg.Format(_T("1号地址呼叫器完成ID为:%s"),data.GetSerialId());
-			MyWriteConsole(writeMsg);
-#endif
-		}
-		m_mtCallLock.Unlock();
-	}
-	else if (callerCmd->GetCallerAdd()==m_CallerAdd2)
-	{
-		m_mtCallLock.Lock();
-		SLZData data ;
-		data = m_pDealData->m_DataList1.GetHead();
-		m_pDealData->m_DataList1.RemoveHead();
-		CString strWaitNum = CommonStrMethod::Int2Str(m_pDealData->m_DataList1.GetCount());
-		theApp.m_pMainWnd->SetWindowText(_T("呼叫终端--当前等待人数：")+strWaitNum);
-		m_pDealData->m_DoneList.AddTail(data);
-		m_mtCallLock.Unlock();
+		if(!m_pDealData->RemoveCallerDoingListData(callerCmd,data))
+			return;
+		
+		m_pDealData->AddDoneListData(data);
 #ifdef _DEBUG
 		CString writeMsg;
-		writeMsg.Format(_T("2号地址呼叫器完成ID为:%s"),data.GetSerialId());
+		writeMsg.Format(_T("1号地址呼叫器完成ID为:%s"),data.GetSerialId());
 		MyWriteConsole(writeMsg);
 #endif
 	}
+	///返回人数
+	int cout = m_pDealData->GetDoingDataCount();
+	CString carriedData = data.GetQueueNumber() + _T(" ");
+	carriedData.AppendFormat(_T("%d"),cout);
+	callerCmd->SetCarriedData(carriedData);
 
+	CString* pWaitText = new CString;
+	pWaitText->Format(_T("等待人数:%d"),cout);
+	::PostMessage(theApp.m_pMainWnd->GetSafeHwnd(),WM_WAITNUMMSG,(WPARAM)pWaitText,NULL);
+	//////////////////////////
+	SLZData* pData = new SLZData;
+	*pData = data;
+	::PostMessage(theApp.m_pMainWnd->GetSafeHwnd(),WM_SHOWDONEMSG,(WPARAM)pData,NULL);
 }
 ///暂停///
 /////////
 void CCallThread::OnPause(CallerCmd* callerCmd)
 {
-
+//	SLZCWndScreen* pWndScreen = SLZCWndScreen::GetInstance();
+	
+//	pWndScreen->AddScreenMsg(_T("暂停服务"),callerCmd->Get
 }
 ///恢复///
 //////////
@@ -428,6 +410,7 @@ void CCallThread::ReturnToCaller(CallerCmd* callerCmd)
 		break;
 	case cmdEvaReq:
 		//		data.SetCmdType(callerCmd.GetSuccess() ? callerCmdShowSuc : callerCmdShowFail);
+		data.SetCmdType(callerCmdShowNum);
 		break;
 	case 	cmdPause:
 		data.SetCmdType(callerCmd->GetSuccess() ? callerCmdShowSuc : callerCmdShowFail);
@@ -460,6 +443,7 @@ void CCallThread::ReturnToCaller(CallerCmd* callerCmd)
 
 BOOL CCallThread::Start()
 {
+	/*
 	wchar_t wbuf[255];
 	ZeroMemory(wbuf,255);
 	GetPrivateProfileString(_T("CompSet"),_T("CallerAdd1"),NULL,wbuf,255,m_strCallPath);
@@ -490,6 +474,13 @@ BOOL CCallThread::Start()
 	GetPrivateProfileString(_T("CompSet"),_T("ShortMsg"),NULL,wbuf,255,m_strCallPath);
 	CString strShortMsg(wbuf);
 	m_strSendMsg = strShortMsg;
+	*/
+	CSystemBasicData basicData;
+	m_bSendMsg = basicData.GetIsSendShortMsg();
+	m_strSendMsg = basicData.GetShortMsg();
+	CCommonConvert::CStringToint(m_CallWaitTime,basicData.GetCallWaitTime());
+
+
 	m_pGetHardCallerCmd = AfxBeginThread(GetHardCallerCmdProc,this,0,0,0,NULL);//读呼叫线程
 	if(!m_pGetHardCallerCmd)
 	{
@@ -501,46 +492,15 @@ BOOL CCallThread::Start()
 	{
 		return FALSE;
 	}
-	SetTimer(NULL,0,1000,MyDoOutTimerMsg);
+//	SetTimer(NULL,0,1500,MyDoOutTimerMsg);
+
+	m_pDealData->Start();
 	return TRUE;
 }
 
 void CALLBACK CCallThread::MyDoOutTimerMsg(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
-	POSITION pos;
-	int count = pCallThread->m_CallingList.GetCount();
-	for (int i=0;i<count;i++)
-	{
-		SLZData data;
-		pos = pCallThread->m_CallingList.FindIndex(i);
-		if (!pos)break;
-		data = pCallThread->m_CallingList.GetAt(pos);
-		CTime currenttime = CTime::GetCurrentTime();
-		CTime calltime = 	data.GetCallTime();
-		if (currenttime-calltime >= CTimeSpan(0,0,pCallThread->m_CallWaitTime,0))
-		{	
-			pCallThread->m_mtCallBackLock.Lock();
-			//if (data.GetBussName()==pCallThread->m_strBuss1)
-			//{
-				
-				pCallThread->m_pDealData->m_DataList1.RemoveHead();
-				pCallThread->m_pDealData->m_DataList1.AddTail(data);
-				
-			//}
-			//if (data.GetBussName()==pCallThread->m_strBuss2)
-			//{
-			//	pCallThread->m_pDealData->m_DataList1.RemoveHead();
-			//	pCallThread->m_pDealData->m_DataList1.AddTail(data);
-			//}	
-			pCallThread->m_CallingList.RemoveAt(pos);
-			pCallThread->m_mtCallBackLock.Unlock();
-#ifdef _DEBUG
-			CString strmsg = _T("呼叫次数到了没有应答,等候时间到，将自动排队到末尾\n");
-			MyWriteConsole(strmsg);
-			strmsg.Format(_T("data ID为:%s\n"),data.GetSerialId());
-			MyWriteConsole(strmsg);
-#endif
-		}
-
-	}
+//	pCallThread->m_pDealData->m_mtDoingLock.Lock();
+	
+//	pCallThread->m_pDealData->m_mtDoingLock.Unlock();
 }

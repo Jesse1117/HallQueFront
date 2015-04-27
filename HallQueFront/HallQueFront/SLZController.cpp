@@ -395,6 +395,7 @@ UINT SLZController::TakingViewThreadProc(LPVOID pParam)
 						{
 							data.SetPhoneNum(cardinfo.strPhoneNum);
 							data.SetCustName(cardinfo.strCustName);
+							data.SetCardNumber(cardinfo.strCardNumber);
 							//…Ë÷√≈≈∂”∫≈¬Î
 							unsigned int CurNum=0;
 							UINT iQueNum;
