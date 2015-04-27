@@ -97,7 +97,7 @@ DWORD WINAPI SLZCardReader::ReadThread(LPVOID pParam)
 	while(1)
 	{
 		m_Read->ReadMsg();
-		Sleep(200);
+		Sleep(300);
 	}
 	return 0;
 }
