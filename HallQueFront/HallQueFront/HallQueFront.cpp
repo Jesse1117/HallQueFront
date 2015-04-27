@@ -11,6 +11,7 @@
 #include "CommonConvert.h"
 #include "CommonStrMethod.h"
 #include "LicenseMaker.h"
+#include "DataDef.h"
 
 #pragma comment(lib, "QueSystemLicense.lib")
 
