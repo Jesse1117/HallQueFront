@@ -49,6 +49,7 @@ public:
 	list<CommDaoQue> m_list_comQue;
 	list<CommDaoWnd> m_list_comWnd;
 	list<CommDaoStaff> m_list_comStaff;
+	list<CARDINFO> m_list_cardInfo;
 };
 
 extern CHallQueFrontApp theApp;
