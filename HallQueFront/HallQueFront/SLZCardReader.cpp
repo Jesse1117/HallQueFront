@@ -145,18 +145,22 @@ BOOL SLZCardReader::ReadMsg()
 		return FALSE;
 	}
 	// 格式转换
-	memcpy(pName,&pucCHMsg[0],30);
+	memcpy(pName,pucCHMsg,30);
 	CString name(pName);
+	name.Replace(_T(" "),_T(""));
 	memcpy(pNU,&pucCHMsg[122],36);
 	CString num(pNU);  
 	CARDINFO cardinfo;
 	cardinfo.iCardType=cardIDCard;
 	cardinfo.strCardNumber=num;//卡号
 	cardinfo.strCustName=name;//姓名
-	if (!cardinfo.strCardNumber.IsEmpty())
+
+	if(cardinfo.strCardNumber.IsEmpty())return FALSE;
+	if ( !IsTheCardOutTime(cardinfo) )
 	{
+		theApp.m_list_cardInfo.push_back(cardinfo);//添加进list
 		CInputNumberDlg InputDlg(theApp.m_pView);
-		if (IDOK==InputDlg.DoModal())
+		if (IDOK == InputDlg.DoModal())
 		{
 			if (!InputDlg.m_strPhoneNum.IsEmpty())
 			{
@@ -165,9 +169,7 @@ BOOL SLZCardReader::ReadMsg()
 				SendMessage(theApp.m_pView->m_hWnd,WM_SHOWPAGE,(WPARAM)&cardinfo,NULL);
 			}
 		}
-
 	}
-
 	return TRUE;
 }
 
@@ -515,4 +517,22 @@ int SLZCardReader::JudgeCardAttchPageID(int level)
 		}
 	}
 	return nPageID;
+}
+
+BOOL SLZCardReader::IsTheCardOutTime(const CARDINFO& cardInfo)
+{
+	BOOL flag = FALSE;
+	list<CARDINFO>::const_iterator itera = theApp.m_list_cardInfo.begin();
+	for(itera;itera != theApp.m_list_cardInfo.end();++itera)
+	{
+		CTime currentTime = CTime::GetCurrentTime();
+		CTimeSpan timeSpan = currentTime - itera->swingTime;
+		CTimeSpan timeDelay(0,2,0,0);
+		if(itera->strCardNumber == cardInfo.strCardNumber && timeSpan <= timeDelay)
+		{
+			flag = TRUE;
+			break;
+		}
+	}
+	return flag;
 }

@@ -73,6 +73,7 @@ public:
 	_tagCardInfo(){
 		nAttchPageID = -1;
 		iCustLevel = 0;
+		swingTime = CTime::GetCurrentTime();
 	}
 	~_tagCardInfo(){}
 public:
@@ -83,6 +84,7 @@ public:
 	CString strAttchQueID;//属于那个队列的队列ID
 	int nAttchPageID;//链接哪个界面
 	CString strPhoneNum; //电话号码
+	CTime swingTime;//刷卡时间
 }CARDINFO,*PCARDINFO;
 
 typedef struct _tagLogicVariables//系统综合逻辑变量
