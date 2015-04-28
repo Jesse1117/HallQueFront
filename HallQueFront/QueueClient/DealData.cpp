@@ -3,7 +3,7 @@
 #include "CommonStrMethod.h"
 #include "com/SLZCCaller.h"
 #include "QueueClient.h"
-#include "ComplSocketClient.h"
+#include "../HallQueFront/ComplSocketClient.h"
 #include "DealPacket.h"
 #include "../HallQueFront/CommonConvert.h"
 #include "SystemBasicData.h"

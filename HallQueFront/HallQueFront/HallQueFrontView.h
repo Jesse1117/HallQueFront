@@ -15,6 +15,7 @@ using namespace std;
 #define  FORSHOWTIME 9568
 #define  WORKTIME 9578
 #define  DOINITThROUGHSCREEN 9579
+#define  CARDWORKTIME 9580
 #define  BUTTONNUM 200
 
 

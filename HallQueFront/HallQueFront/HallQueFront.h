@@ -42,6 +42,8 @@ public:
 	list<CString> m_list_caCheMsg;//数据缓存cache
 public:
 	BOOL ReadLogicVariablesFromFile();//从文件读出系统逻辑变量
+	BOOL ReadCardInfoMsg();//读刷身份证的信息
+	BOOL WriteCardInfoMsg();//写刷身份证的信息
 private:
 	BOOL AddAutoRun(CString strValueName);
 public:
@@ -50,6 +52,7 @@ public:
 	list<CommDaoWnd> m_list_comWnd;
 	list<CommDaoStaff> m_list_comStaff;
 	list<CARDINFO> m_list_cardInfo;
+	virtual int ExitInstance();
 };
 
 extern CHallQueFrontApp theApp;

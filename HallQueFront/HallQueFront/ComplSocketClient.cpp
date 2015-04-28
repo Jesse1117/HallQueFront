@@ -2,14 +2,17 @@
 #include "ComplSocketClient.h"
 #include "DoFile.h"
 #include "HallQueFront.h"
+#include "ConnectConfig.h"
+
 
 extern void MyWriteConsole(CString str);
 CComplSocketClient::CComplSocketClient(void) : m_romotePort(9527)
 , m_nTimeOut(1000)
 {
-	m_romoteIP = m_connect.GetRomoteIP();
-	m_romotePort = m_connect.GetRomotePort();
-	m_nTimeOut = m_connect.GetTimeOut();
+	CConnectConfig connect;
+	m_romoteIP = connect.GetRomoteIP();
+	m_romotePort = connect.GetRomotePort();
+	m_nTimeOut = connect.GetTimeOut();
 	if(m_nTimeOut==0)m_nTimeOut=1000;
 	CDoFile doFile;
 	CString exePath = doFile.GetExeFullFilePath();
@@ -214,7 +217,7 @@ BOOL CComplSocketClient::SendData(USHORT port,CString IP,const std::string& msg,
 
 void CComplSocketClient::DealCache(const CString& msg)
 {
-	if(msg.IsEmpty())return;
+	if(msg.IsEmpty() || IsTheSameMsg(msg))return;
 	theApp.m_list_caCheMsg.push_back(msg);
 #ifdef _DEBUG
 	CString str=_T("cache size:");
@@ -301,4 +304,17 @@ BOOL CComplSocketClient::AppendListMsg()
 		return FALSE;
 	}
 	return TRUE;
+}
+
+BOOL CComplSocketClient::IsTheSameMsg(const CString& msg)
+{
+	list<CString>::const_iterator itera = theApp.m_list_caCheMsg.begin();
+	for(itera;itera != theApp.m_list_caCheMsg.end(); ++itera)
+	{
+		if(*itera == msg)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
 }

@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "ComplSocketClient.h"
+#include "../HallQueFront/ComplSocketClient.h"
 #include "../HallQueFront/DoFile.h"
 #include "../HallQueFront/CommonConvert.h"
 #include "QueueClient.h"
@@ -202,7 +202,7 @@ BOOL CComplSocketClient::SendData(USHORT port,CString IP,const std::string& msg,
 
 void CComplSocketClient::DealCache(const CString& msg)
 {
-	if(msg.IsEmpty())return;
+	if(msg.IsEmpty() || IsTheSameMsg(msg))return;
 	theApp.m_list_caCheMsg.push_back(msg);
 #ifdef _DEBUG
 	CString str=_T("cache size:");
@@ -289,4 +289,17 @@ BOOL CComplSocketClient::AppendListMsg()
 		return FALSE;
 	}
 	return TRUE;
+}
+
+BOOL CComplSocketClient::IsTheSameMsg(const CString& msg)
+{
+	list<CString>::const_iterator itera = theApp.m_list_caCheMsg.begin();
+	for(itera;itera != theApp.m_list_caCheMsg.end(); ++itera)
+	{
+		if(*itera == msg)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
 }

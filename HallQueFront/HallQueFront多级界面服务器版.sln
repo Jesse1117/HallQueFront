@@ -5,8 +5,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HallQueFrontForPageConnectT
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HallQueFrontServer", "HallQueFrontServer\HallQueFrontServer.vcproj", "{198F0D27-E8C9-4AD2-80C5-16570F7DC796}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QueueCaller", "QueueCaller\QueueCaller.vcproj", "{1100D058-AB99-4F81-9C80-B989205CE8F8}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QueueClient", "QueueClient\QueueClient.vcproj", "{C05C5F6F-9D04-4E4F-9683-79F271C60DD8}"
 EndProject
 Global
@@ -23,10 +21,6 @@ Global
 		{198F0D27-E8C9-4AD2-80C5-16570F7DC796}.Debug|Win32.Build.0 = Debug|Win32
 		{198F0D27-E8C9-4AD2-80C5-16570F7DC796}.Release|Win32.ActiveCfg = Release|Win32
 		{198F0D27-E8C9-4AD2-80C5-16570F7DC796}.Release|Win32.Build.0 = Release|Win32
-		{1100D058-AB99-4F81-9C80-B989205CE8F8}.Debug|Win32.ActiveCfg = Debug|Win32
-		{1100D058-AB99-4F81-9C80-B989205CE8F8}.Debug|Win32.Build.0 = Debug|Win32
-		{1100D058-AB99-4F81-9C80-B989205CE8F8}.Release|Win32.ActiveCfg = Release|Win32
-		{1100D058-AB99-4F81-9C80-B989205CE8F8}.Release|Win32.Build.0 = Release|Win32
 		{C05C5F6F-9D04-4E4F-9683-79F271C60DD8}.Debug|Win32.ActiveCfg = Debug|Win32
 		{C05C5F6F-9D04-4E4F-9683-79F271C60DD8}.Debug|Win32.Build.0 = Debug|Win32
 		{C05C5F6F-9D04-4E4F-9683-79F271C60DD8}.Release|Win32.ActiveCfg = Release|Win32

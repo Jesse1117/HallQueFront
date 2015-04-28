@@ -50,6 +50,7 @@ CHallQueFrontApp::CHallQueFrontApp() : m_pView(NULL)
 	// TODO: 在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
 	memset(&m_logicVariables,0,sizeof(m_logicVariables));
+	ReadCardInfoMsg();
 }
 
 
@@ -202,6 +203,44 @@ BOOL CHallQueFrontApp::ReadLogicVariablesFromFile()
 	return FALSE;
 }
 
+BOOL CHallQueFrontApp::ReadCardInfoMsg()
+{
+	CString strExePath = CommonStrMethod::GetModuleDir();
+	strExePath += _T("cardinfolist.dat");
+	CFile cardFile;
+	CARDINFO cardInfo;
+	if(cardFile.Open(strExePath,CFile::modeRead))
+	{
+		ULONGLONG lenght = cardFile.GetLength();
+		for(int i=0;i<lenght;i++)
+		{
+			cardFile.Read(&cardInfo,sizeof(CARDINFO));
+			cardFile.Seek(0,CFile::current);
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL CHallQueFrontApp::WriteCardInfoMsg()
+{
+	CString strExePath = CommonStrMethod::GetModuleDir();
+	strExePath += _T("cardinfolist.dat");
+	CFile cardFile;
+	CARDINFO cardInfo;
+	if(cardFile.Open(strExePath,CFile::modeWrite | CFile::modeCreate))
+	{
+		list<CARDINFO>::const_iterator itera = theApp.m_list_cardInfo.begin();
+		for(itera;itera!=theApp.m_list_cardInfo.end();++itera)
+		{
+			cardFile.Write(&cardFile,sizeof(CARDINFO));
+//			cardFile.SeekToEnd();
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
 BOOL CHallQueFrontApp::AddAutoRun(CString strValueName)
 {
 	HKEY hKey;
@@ -291,3 +330,10 @@ BOOL CHallQueFrontApp::AddAutoRun(CString strValueName)
 
 
 
+
+int CHallQueFrontApp::ExitInstance()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	WriteCardInfoMsg();
+	return CWinApp::ExitInstance();
+}

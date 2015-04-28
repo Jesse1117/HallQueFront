@@ -657,6 +657,21 @@ void CHallQueFrontView::OnTimer(UINT_PTR nIDEvent)
 			KillTimer(DOINITThROUGHSCREEN);
 		}
 		break;
+	case CARDWORKTIME:
+		{
+			list<CARDINFO>::const_iterator itera = theApp.m_list_cardInfo.begin();
+			for(itera;itera != theApp.m_list_cardInfo.end();++itera)
+			{
+				CARDINFO temp = *itera;
+				CTimeSpan delayTime(0,2,0,0);
+				CTime currTime = CTime::GetCurrentTime();
+				if(currTime - temp.swingTime > delayTime)
+				{
+					theApp.m_list_cardInfo.erase(itera);
+				}
+			}
+		}
+		break;
 	}
 	CView::OnTimer(nIDEvent);
 }
@@ -790,6 +805,7 @@ void CHallQueFrontView::OnInitialUpdate()
 	SetTimer(FORSHOWTIME,1000,NULL);//显示界面时间
 	SetTimer(WORKTIME,1000,NULL);//检测工作时间
 	SetTimer(DOINITThROUGHSCREEN,5*1000,NULL);//
+	SetTimer(CARDWORKTIME,3000,NULL);
 
 	//////////////////////启动警告窗口
 	m_pWaringDlg = new CWaringDlg();

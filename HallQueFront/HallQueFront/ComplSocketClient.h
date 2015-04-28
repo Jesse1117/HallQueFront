@@ -1,5 +1,4 @@
 #pragma once
-#include "ConnectConfig.h"
 #include "CommonConvert.h"
 #include "SocketBufDef.h"
 #include <string>
@@ -15,8 +14,11 @@ public:
 	BOOL SendData(const CString& msg,std::string& recvMsg,int& actRecvSize);
 	BOOL SendData(USHORT port,CString IP,const CString& msg,std::string& recvMsg,int& actRecvSize);
 	BOOL SendData(USHORT port,CString IP,const std::string& msg,int size,std::string& recvMsg,int& actRecvSize);
+
+	void SetRemoteIp(const CString& ip);
+	void SetRemotePort(UINT port);
+	void SetTimeOut(UINT nMsec);
 private:
-	CConnectConfig m_connect;
 	CString m_romoteIP;
 	UINT m_romotePort;
 	SOCKET m_sClient;
@@ -27,4 +29,5 @@ private:
 	void DealCache(const CString& msg);
 	void ReSendMsg();
 	BOOL AppendListMsg();
+	BOOL IsTheSameMsg(const CString& msg);
 };

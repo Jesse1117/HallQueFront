@@ -324,10 +324,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ComplSocketClient.h"
-				>
-			</File>
-			<File
 				RelativePath=".\DataDef.h"
 				>
 			</File>
