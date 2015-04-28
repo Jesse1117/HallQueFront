@@ -97,7 +97,7 @@ DWORD WINAPI SLZCardReader::ReadThread(LPVOID pParam)
 	while(1)
 	{
 		m_Read->ReadMsg();
-		Sleep(200);
+		Sleep(300);
 	}
 	return 0;
 }
@@ -129,12 +129,12 @@ BOOL SLZCardReader::ReadMsg()
 		}
 
 		st=SDT_SelectIDCard(iPort,pucManaMsg,1);
-		if(st!=0x90)
+		if(st != 0x90)
 		{
 			return FALSE;
 		}
 		st=SDT_ReadBaseMsg(iPort,pucCHMsg,&puiCHMsgLen,pucPHMsg,&puiPHMsglen,1);
-		if(st!=0x90)
+		if(st != 0x90)
 		{
 			return FALSE;
 		}
