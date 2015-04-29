@@ -209,13 +209,23 @@ BOOL CHallQueFrontApp::ReadCardInfoMsg()
 	strExePath += _T("cardinfolist.dat");
 	CFile cardFile;
 	CARDINFO cardInfo;
+	SaveCardInfo saveCardInfo;
 	if(cardFile.Open(strExePath,CFile::modeRead))
 	{
-		ULONGLONG lenght = cardFile.GetLength();
+		ULONGLONG lenght = cardFile.GetLength() / sizeof(saveCardInfo);
 		for(int i=0;i<lenght;i++)
 		{
-			cardFile.Read(&cardInfo,sizeof(CARDINFO));
+			cardFile.Read(&saveCardInfo,sizeof(SaveCardInfo));
 			cardFile.Seek(0,CFile::current);
+			cardInfo.iCardType = saveCardInfo.iCardType;
+			cardInfo.nAttchPageID = saveCardInfo.nAttchPageID;
+			cardInfo.strAttchQueID = saveCardInfo.strAttchQueID;
+			cardInfo.strCardNumber = saveCardInfo.strCardNumber;
+			cardInfo.strCustName = saveCardInfo.strCustName;
+			cardInfo.strPhoneNum = saveCardInfo.strPhoneNum;
+			cardInfo.swingTime = saveCardInfo.swingTime;
+
+			theApp.m_list_cardInfo.push_back(cardInfo);
 		}
 		return TRUE;
 	}
@@ -227,14 +237,21 @@ BOOL CHallQueFrontApp::WriteCardInfoMsg()
 	CString strExePath = CommonStrMethod::GetModuleDir();
 	strExePath += _T("cardinfolist.dat");
 	CFile cardFile;
-	CARDINFO cardInfo;
+	SaveCardInfo saveCardInfo;
 	if(cardFile.Open(strExePath,CFile::modeWrite | CFile::modeCreate))
 	{
 		list<CARDINFO>::const_iterator itera = theApp.m_list_cardInfo.begin();
-		for(itera;itera!=theApp.m_list_cardInfo.end();++itera)
+		for(itera;itera != theApp.m_list_cardInfo.end();++itera)
 		{
-			cardFile.Write(&cardFile,sizeof(CARDINFO));
-//			cardFile.SeekToEnd();
+			saveCardInfo.iCardType = itera->iCardType;
+			saveCardInfo.nAttchPageID = itera->nAttchPageID;
+			wcscpy_s(saveCardInfo.strAttchQueID,255,itera->strAttchQueID);
+			wcscpy_s(saveCardInfo.strCardNumber,255,itera->strCardNumber);
+			wcscpy_s(saveCardInfo.strCustName,255,itera->strCustName);
+			wcscpy_s(saveCardInfo.strPhoneNum,255,itera->strPhoneNum);
+			saveCardInfo.swingTime = itera->swingTime;
+			cardFile.SeekToEnd();
+			cardFile.Write(&saveCardInfo,sizeof(SaveCardInfo));
 		}
 		return TRUE;
 	}

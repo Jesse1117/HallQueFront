@@ -279,7 +279,8 @@ BOOL CComplSocketClient::AppendListMsg()
 			{
 				CString wStrMsg;
 				CCommonConvert::CharToCstring(wStrMsg,msg);
-				theApp.m_list_caCheMsg.push_back(wStrMsg);
+				if(!IsTheSameMsg(wStrMsg))
+					theApp.m_list_caCheMsg.push_back(wStrMsg);
 			}
 		}
 		file.Close();

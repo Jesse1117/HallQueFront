@@ -87,6 +87,17 @@ public:
 	CTime swingTime;//刷卡时间
 }CARDINFO,*PCARDINFO;
 
+typedef struct
+{
+	CardType iCardType;
+	WCHAR strCardNumber[256];
+	WCHAR strCustName[256];
+	WCHAR strAttchQueID[256];
+	int nAttchPageID;
+	WCHAR strPhoneNum[256];
+	CTime swingTime;//刷卡时间
+}SaveCardInfo;
+
 typedef struct _tagLogicVariables//系统综合逻辑变量
 {
 	BOOL IsAutoCloseComputer;//自动关机
