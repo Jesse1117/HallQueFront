@@ -668,6 +668,7 @@ void CHallQueFrontView::OnTimer(UINT_PTR nIDEvent)
 				if(currTime - temp.swingTime > delayTime)
 				{
 					theApp.m_list_cardInfo.erase(itera);
+					break;
 				}
 			}
 		}
