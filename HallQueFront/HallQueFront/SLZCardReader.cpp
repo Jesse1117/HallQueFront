@@ -104,6 +104,7 @@ DWORD WINAPI SLZCardReader::ReadThread(LPVOID pParam)
 
 BOOL SLZCardReader::ReadMsg()
 {
+	
 	Sleep(10);
 	int iPort=1001;
 	unsigned char pucManaInfo[256]={0};
@@ -158,6 +159,10 @@ BOOL SLZCardReader::ReadMsg()
 	if(cardinfo.strCardNumber.IsEmpty())return FALSE;
 	if ( !IsTheCardOutTime(cardinfo) )
 	{
+		if(theApp.m_pView->GetCurrentShowPage() != 0)
+		{
+			return FALSE;
+		}
 		theApp.m_list_cardInfo.push_back(cardinfo);//Ìí¼Ó½ølist
 		CInputNumberDlg InputDlg(theApp.m_pView);
 		if (IDOK == InputDlg.DoModal())
@@ -165,7 +170,7 @@ BOOL SLZCardReader::ReadMsg()
 			if (!InputDlg.m_strPhoneNum.IsEmpty())
 			{
 				cardinfo.strPhoneNum = InputDlg.m_strPhoneNum;
-				cardinfo.nAttchPageID = 1;
+				cardinfo.nAttchPageID = m_cardConnectInfo.RegAttchPageID;
 				SendMessage(theApp.m_pView->m_hWnd,WM_SHOWPAGE,(WPARAM)&cardinfo,NULL);
 			}
 		}

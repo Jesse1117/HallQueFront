@@ -172,6 +172,9 @@ public:
 	void ShowPage(int nPageID);
 	afx_msg void OnLeadinwav();
 	afx_msg void OnHidemain();
+	int GetCurrentShowPage();
+private:
+	int m_nCurrentShowPage;
 };
 
 #ifndef _DEBUG  // HallQueFrontView.cpp 中的调试版本
