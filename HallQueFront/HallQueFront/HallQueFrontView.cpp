@@ -1062,6 +1062,7 @@ void CHallQueFrontView::OnButtonClick(UINT uID)
 					m_Mlock.Lock();
 					m_cardinfo.strAttchQueID = strAddress;
 					m_list_address.AddTail(m_cardinfo);
+					theApp.m_list_cardInfo.push_back(m_cardinfo);
 					m_Mlock.Unlock();
 				}
 			}

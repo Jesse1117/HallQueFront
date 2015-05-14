@@ -143,7 +143,7 @@ void CCallThread::DoEvaMsg(const MSG& msg)
 			data.SetQueueNumber(_T("0"));
 			data.SetCallTime(curTime);
 			data.SetTakingNumTime(curTime);
-			m_rFinshQueData.Add(data);//加入完成队列
+//			m_rFinshQueData.Add(data);//加入完成队列
 		}
 	}
 	if(pEvaData)//释放资源
