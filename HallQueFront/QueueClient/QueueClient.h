@@ -19,6 +19,7 @@ using namespace std;
 #define WM_SHOWMSG WM_USER + 102
 #define WM_SHOWCALLMSG WM_USER + 103
 #define WM_SHOWDONEMSG WM_USER + 104
+#define WM_SHOWNORMALMSG WM_USER + 105
 
 
 class CQueueClientApp : public CWinApp

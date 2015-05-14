@@ -90,6 +90,7 @@ BEGIN_MESSAGE_MAP(CQueueClientDlg, CDialog)
 	ON_MESSAGE(WM_SHOWMSG,&CQueueClientDlg::OnShowAddMsg)
 	ON_MESSAGE(WM_SHOWCALLMSG,&CQueueClientDlg::OnShowCallMsg)
 	ON_MESSAGE(WM_SHOWDONEMSG,&CQueueClientDlg::OnShowDoneMsg)
+	ON_MESSAGE(WM_SHOWNORMALMSG,&CQueueClientDlg::OnShowNormalMsg)
 END_MESSAGE_MAP()
 
 
@@ -392,10 +393,45 @@ LRESULT CQueueClientDlg::OnShowDoneMsg(WPARAM wParam,LPARAM lParam)
 		strSerialID = m_listctr_que.GetItemText(i,6);
 		if(strSerialID == pData->GetSerialId())
 		{
+			m_listctr_que.SetItemText(i,1,pData->GetCustName());
+			m_listctr_que.SetItemColor(1,i,RGB(144,144,144));
+			break;
+		}
+	}
+
+	delete pData;
+	return 0;
+}
+
+LRESULT CQueueClientDlg::OnShowNormalMsg(WPARAM wParam,LPARAM lParam)
+{
+	SLZData* pData = (SLZData*)wParam;
+
+	int count = m_listctr_que.GetItemCount();
+	CString strSerialID;
+	for(int i=0;i<count;i++)
+	{
+		strSerialID = m_listctr_que.GetItemText(i,6);
+		if(strSerialID == pData->GetSerialId())
+		{
+//			m_listctr_que.SetItemText(i,1,pData->GetCustName());
+//			m_listctr_que.SetItemColor(1,i,RGB(255,255,255));
 			m_listctr_que.DeleteItem(i);
 			break;
 		}
 	}
+
+	count = m_listctr_que.GetItemCount();
+	CString strCount;
+	strCount.Format(_T("%d"),count);
+	m_listctr_que.InsertItem(count,strCount);
+	int nCol = 1;
+	m_listctr_que.SetItemText(count,nCol++,pData->GetCustName());
+	m_listctr_que.SetItemText(count,nCol++,pData->GetCardNumber());
+	m_listctr_que.SetItemText(count,nCol++,pData->GetBussName());
+	m_listctr_que.SetItemText(count,nCol++,pData->GetPhoneNum());
+	m_listctr_que.SetItemText(count,nCol++,pData->GetQueueNumber());
+	m_listctr_que.SetItemText(count,nCol++,pData->GetSerialId());
 
 	delete pData;
 	return 0;

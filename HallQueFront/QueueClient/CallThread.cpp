@@ -207,23 +207,23 @@ void CCallThread::OnQuit(CallerCmd* callerCmd)
 ////////////
 void CCallThread::OnCall(CallerCmd* callerCmd)
 {	
+	SLZData callingData;
+	if (!m_pDealData->IsEmptyCallingListData())
+	{
+		if(m_pDealData->RemoveCallingListData(callerCmd,callingData))
+			m_pDealData->AddDoneListData(callingData);
+	}
+	
+
 	SLZData data;
 
 	if (m_pDealData->GetDoingDataCount() > 0)
 	{
 		if(!m_pDealData->GetDoingFirstData(callerCmd,data))
 			return;
-		
-//		data.SetWindowId(callerCmd->GetCallerAdd());
+	
 		CSoundPlay::GetInstance()->DataPlay(data);
 		data.SetCallTime(CTime::GetCurrentTime());
-	
-// 
-// 		m_mtCallLock.Lock();
-// 
-// 		m_CallingList.AddTail(data);
-// 		m_mtCallLock.Unlock(); 
-		
 	}
 	
 	if (m_bSendMsg)
@@ -232,10 +232,10 @@ void CCallThread::OnCall(CallerCmd* callerCmd)
 		{
 			CShortMsgModem::GetInstance()->SendMsg(data.GetPhoneNum(),m_strSendMsg);
 			///设为已经发送
-			data.SetIsHaveSendToPhone(TRUE);
+//			data.SetIsHaveSendToPhone(TRUE);
 
 			//////////////////////////////////////////修改list
-			m_pDealData->ModifyDoingListData(data);
+//			m_pDealData->ModifyDoingListData(data);
 
 #ifdef _DEBUG
 			CString strMsg;
@@ -246,9 +246,9 @@ void CCallThread::OnCall(CallerCmd* callerCmd)
 	}
 	
 	////////////////////////////////设置为正在呼叫
-	data.SetIsCalling(TRUE);
-	data.SetCallingAdd(callerCmd->GetCallerAdd());
-	m_pDealData->ModifyDoingListData(data);
+//	data.SetIsCalling(TRUE);
+//	data.SetCallingAdd(callerCmd->GetCallerAdd());
+//	m_pDealData->ModifyDoingListData(data);
 
 	SLZData* pData = new SLZData;
 	*pData = data;
@@ -304,9 +304,9 @@ void CCallThread::OnEvaReq(CallerCmd* callerCmd)
 {
 	
 	SLZData data ;
-	if (!m_pDealData->IsEmptyDoingListDat())
+	if (!m_pDealData->IsEmptyCallingListData())
 	{
-		if(!m_pDealData->RemoveCallerDoingListData(callerCmd,data))
+		if(!m_pDealData->RemoveCallingListData(callerCmd,data))
 			return;
 		
 		m_pDealData->AddDoneListData(data);
@@ -334,9 +334,9 @@ void CCallThread::OnEvaReq(CallerCmd* callerCmd)
 /////////
 void CCallThread::OnPause(CallerCmd* callerCmd)
 {
-//	SLZCWndScreen* pWndScreen = SLZCWndScreen::GetInstance();
-	
-//	pWndScreen->AddScreenMsg(_T("暂停服务"),callerCmd->Get
+// 	SLZCWndScreen* pWndScreen = SLZCWndScreen::GetInstance();
+// 	
+// 	pWndScreen->AddScreenMsg(_T("暂停服务"),callerCmd->
 }
 ///恢复///
 //////////
@@ -378,7 +378,12 @@ void CCallThread::OnCallBusc(CallerCmd* callerCmd)
 */
 void CCallThread::OnExChange(CallerCmd* callerCmd)
 {
+	SLZData data;
+	m_pDealData->ReStartQueue(callerCmd,data);
 
+	SLZData* pData = new SLZData;
+	*pData = data;
+	::PostMessage(theApp.m_pMainWnd->GetSafeHwnd(),WM_SHOWNORMALMSG,(WPARAM)pData,NULL);
 }
 /*返回给呼叫器*/
 void CCallThread::ReturnToCaller(CallerCmd* callerCmd)

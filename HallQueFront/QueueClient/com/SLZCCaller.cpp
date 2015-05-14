@@ -218,19 +218,19 @@ void SLZCCaller::DoCallerMsg(char *buf,int size)
 			callerData.SetCmdType(cmdPause);
 		}
 	}
-	if(buf[size-3]==HARDWARE_CALLER_START && size>=11)//数字+开始，转移窗口或队列
+	if(buf[size-3]==HARDWARE_CALLER_START && size==10 /*&& size>=11*/)//数字+开始，转移窗口或队列
 	{
 		callerData.SetCmdType(cmdExChange);
-		char resultbuf[50]={0};
-		int length=SepaMsgNum(buf,resultbuf,size);
-		CString str;
-		for(int i=0;i<length;i++)
-		{
-			CString temp;
-			temp.Format(_T("%x"),resultbuf[i]);
-			str+=temp;
-		}
-		callerData.SetAttchMsg(str);
+// 		char resultbuf[50]={0};
+// 		int length=SepaMsgNum(buf,resultbuf,size);
+// 		CString str;
+// 		for(int i=0;i<length;i++)
+// 		{
+// 			CString temp;
+// 			temp.Format(_T("%x"),resultbuf[i]);
+// 			str+=temp;
+// 		}
+// 		callerData.SetAttchMsg(str);
 	}
 
 	////////////////////解析完消息以后放入缓冲区

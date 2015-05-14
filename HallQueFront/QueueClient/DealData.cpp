@@ -192,43 +192,6 @@ void CALLBACK CDealData::MyDoOutTimerMsg(HWND hwnd, UINT uMsg, UINT idEvent, DWO
 			dealdata->m_WaitList.RemoveAt(pos);
 //			dealdata->m_mtWaitLock.Unlock();
 		}
-	
-	}
-
-
-	pos = dealdata->m_doingDataList.GetHeadPosition();
-	//	int count = pCallThread->m_pDealData->GetDoingDataCount();
-	POSITION poslast;
-	SLZData data;
-// #ifdef _DEBUG
-// 	int num = 0;
-// #endif
-	while(pos)
-	{
-
-		poslast = pos;
-		data = dealdata->m_doingDataList.GetNext(pos);
-// #ifdef _DEBUG
-// 		CString str = data.GetQueueNumber();
-// 		str.AppendFormat(_T("          %d"),++num);
-// 		MyWriteConsole(str);
-// #endif
-
-		CTime currenttime = CTime::GetCurrentTime();
-		CTime calltime = 	data.GetCallTime();
-		if (currenttime-calltime >= CTimeSpan(0,0,dealdata->m_CallWaitTime,0)  && data.GetIsCalling())
-		{
-			data.SetIsCalling(FALSE);
-			dealdata->m_doingDataList.RemoveAt(poslast);
-			dealdata->AddDoingListData(data);
-#ifdef _DEBUG
-			CString strmsg = _T("呼叫次数到了没有应答,等候时间到，将自动排队到末尾\n");
-			MyWriteConsole(strmsg);
-			strmsg.Format(_T("data ID为:%s\n"),data.GetSerialId());
-			MyWriteConsole(strmsg);
-#endif
-			break;
-		}
 	}
 }
 
@@ -377,9 +340,11 @@ BOOL CDealData::GetDoingFirstData(CallerCmd* callerCmd,SLZData& data)
 	}
 
 	POSITION pos = m_doingDataList.GetHeadPosition();
+	POSITION poslast = pos;
 	SLZData temp;
 	while(pos)
 	{
+		poslast = pos;
 		temp = m_doingDataList.GetNext(pos);
 		for(int i=0;i<3;i++)
 		{
@@ -387,70 +352,19 @@ BOOL CDealData::GetDoingFirstData(CallerCmd* callerCmd,SLZData& data)
 			{
 				flag = TRUE;
 				data = temp;
+				m_doingDataList.RemoveAt(poslast);
 				break;
 			}
 		}
 		if(flag)
 		{
+			data.SetCallingAdd(callerCmd->GetCallerAdd());
+			data.SetIsCalling(TRUE);
+			AddCallingListData(data);
 			break;
 		}
 	}
 	return flag;
-/*
-	BOOL isHaveSecBuss = FALSE;
-	if(pCallerWnd->m_strCanDoBuss[1]  !=  '\0' || pCallerWnd->m_strCanDoBuss[2] != '\0')
-		isHaveSecBuss = TRUE;
-
-//	m_mtDoingLock.Lock();
-	if(!isHaveSecBuss)
-	{
-	POSITION pos = m_doingDataList.GetHeadPosition();
-	SLZData temp;
-	while(pos)
-	{
-		 temp = m_doingDataList.GetNext(pos);
-		for(int i=0;i<3;i++)
-		{
-			if(temp.GetBussName() == pCallerWnd->m_strCanDoBuss[i])
-			{
-				flag = TRUE;
-				data = temp;
-				break;
-			}
-		}
-		if(flag)
-		{
-			break;
-		}
-	}
-	}
-	else
-	{
-		POSITION pos = m_doingDataList.GetHeadPosition();
-		SLZData temp,maxTemp;
-		maxTemp.SetRecvTime(CTime::GetCurrentTime());
-		while(pos)
-		{
-			temp = m_doingDataList.GetNext(pos);
-			for(int i=0;i<3;i++)
-			{
-				if(temp.GetBussName() == pCallerWnd->m_strCanDoBuss[i])
-				{
-					flag = TRUE;
-					maxTemp =  temp.GetRecvTime() < maxTemp.GetRecvTime() ? temp : maxTemp;
-					break;
-				}
-			}
-
-		}
-		if(flag)
-		{
-			data = maxTemp;
-		}
-	}
-//	m_mtDoingLock.Unlock();
-	return flag;
-	*/
 }
 
 int CDealData::GetDoingDataCount()
@@ -461,44 +375,56 @@ int CDealData::GetDoingDataCount()
 	return count;
 }
 
-BOOL CDealData::ModifyDoingListData( SLZData& data)
+void CDealData::AddCallingListData(SLZData& data)
 {
-	
-	BOOL flag = FALSE;
-	POSITION pos = m_doingDataList.GetHeadPosition();
-	POSITION poslast;
-	while(pos)
-	{
-		poslast = pos;
-		SLZData dataTemp = m_doingDataList.GetNext(pos);
-		if(dataTemp.GetSerialId() == data.GetSerialId())
-		{
-			m_mtDoingLock.Lock();
-			m_doingDataList.SetAt(poslast,data);
-			m_mtDoingLock.Unlock();
-			flag = TRUE;
-			break;
-		}
-	}
-	
-	return flag;
+	m_mtCallingLock.Lock();
+	m_callingList.push_back(data);
+	m_mtCallingLock.Unlock();
 }
 
-BOOL CDealData::IsEmptyDoingListDat()
+// BOOL CDealData::ModifyDoingListData( SLZData& data)
+// {
+// 	
+// 	BOOL flag = FALSE;
+// 	POSITION pos = m_doingDataList.GetHeadPosition();
+// 	POSITION poslast;
+// 	while(pos)
+// 	{
+// 		poslast = pos;
+// 		SLZData dataTemp = m_doingDataList.GetNext(pos);
+// 		if(dataTemp.GetSerialId() == data.GetSerialId())
+// 		{
+// 			m_mtDoingLock.Lock();
+// 			m_doingDataList.SetAt(poslast,data);
+// 			m_mtDoingLock.Unlock();
+// 			flag = TRUE;
+// 			break;
+// 		}
+// 	}
+// 	
+// 	return flag;
+// }
+
+// BOOL CDealData::IsEmptyDoingListDat()
+// {
+// 	BOOL flag = FALSE;
+// //	m_mtDoingLock.Lock();
+// 	flag = m_doingDataList.IsEmpty();
+// //	m_mtDoingLock.Unlock();
+// 	return flag;
+// }
+
+BOOL CDealData::IsEmptyCallingListData()
 {
-	BOOL flag = FALSE;
-//	m_mtDoingLock.Lock();
-	flag = m_doingDataList.IsEmpty();
-//	m_mtDoingLock.Unlock();
-	return flag;
+	return m_callingList.empty();
 }
 
-void CDealData::RemoveHeadDoingListData()
-{
-	m_mtDoingLock.Lock();
-	m_doingDataList.RemoveHead();
-	m_mtDoingLock.Unlock();
-}
+// void CDealData::RemoveHeadDoingListData()
+// {
+// 	m_mtDoingLock.Lock();
+// 	m_doingDataList.RemoveHead();
+// 	m_mtDoingLock.Unlock();
+// }
 
 BOOL CDealData::SaveDoingData()
 {
@@ -596,27 +522,74 @@ BOOL CDealData::ReadWaitData()
 	return FALSE;
 }
 
-BOOL CDealData::RemoveCallerDoingListData(CallerCmd* callerCmd,SLZData& data)
+// BOOL CDealData::RemoveCallerDoingListData(CallerCmd* callerCmd,SLZData& data)
+// {
+// 	
+// 	BOOL flag = FALSE;
+// 	SLZData tempData;
+// 	POSITION pos = m_doingDataList.GetHeadPosition();
+// 	POSITION posLast;
+// 	while(pos)
+// 	{
+// 		posLast = pos;
+// 		tempData = m_doingDataList.GetNext(pos);
+// 		if(tempData.GetCallingAdd() == callerCmd->GetCallerAdd() && tempData.GetIsCalling())
+// 		{
+// 			data = tempData;
+// 			flag = TRUE;
+// 			m_mtDoingLock.Lock();
+// 			m_doingDataList.RemoveAt(posLast);
+// 			m_mtDoingLock.Unlock();
+// 			break;
+// 		}
+// 	}
+// 	
+// 	return flag;
+// }
+
+BOOL CDealData::RemoveCallingListData(CallerCmd* callerCmd,SLZData& data)
 {
-	
 	BOOL flag = FALSE;
 	SLZData tempData;
-	POSITION pos = m_doingDataList.GetHeadPosition();
-	POSITION posLast;
-	while(pos)
+	list<SLZData>::const_iterator itera = m_callingList.begin();
+	for(itera;itera!=m_callingList.end();++itera)
 	{
-		posLast = pos;
-		tempData = m_doingDataList.GetNext(pos);
-		if(tempData.GetCallingAdd() == callerCmd->GetCallerAdd() && tempData.GetIsCalling())
+		tempData = *itera;
+		if(tempData.GetCallingAdd() == callerCmd->GetCallerAdd())
 		{
+			flag = true;
 			data = tempData;
-			flag = TRUE;
-			m_mtDoingLock.Lock();
-			m_doingDataList.RemoveAt(posLast);
-			m_mtDoingLock.Unlock();
+			m_mtCallingLock.Lock();
+			m_callingList.erase(itera);
+			m_mtCallingLock.Unlock();
 			break;
 		}
 	}
-	
+	return flag;
+}
+
+BOOL CDealData::ReStartQueue(CallerCmd* callerCmd,SLZData& data)
+{
+	BOOL flag = FALSE;
+	SLZData tempData;
+
+	list<SLZData>::const_iterator itera = m_callingList.begin();
+	for(itera;itera!=m_callingList.end();++itera)
+	{
+		tempData = *itera;
+		if(tempData.GetCallingAdd() == callerCmd->GetCallerAdd())
+		{
+			flag = TRUE;
+			data = tempData;
+			m_mtCallingLock.Lock();
+			m_callingList.erase(itera);
+			m_mtCallingLock.Unlock();
+		}
+	}
+
+	if(flag)
+	{
+		AddCallingListData(data);
+	}
 	return flag;
 }

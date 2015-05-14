@@ -48,6 +48,7 @@ public:
 	afx_msg LRESULT OnShowAddMsg(WPARAM wParam,LPARAM lParam);
 	afx_msg LRESULT OnShowCallMsg(WPARAM wParam,LPARAM lParam);
 	afx_msg LRESULT OnShowDoneMsg(WPARAM wParam,LPARAM lParam);
+	afx_msg LRESULT OnShowNormalMsg(WPARAM wParam,LPARAM lParam);
 //	afx_msg LRESULT OnMyShowMessage(WPARAM wParam, LPARAM lParam);//接受界面显示缺纸消息函数
 private:
 	int m_nCurrSlectItem;

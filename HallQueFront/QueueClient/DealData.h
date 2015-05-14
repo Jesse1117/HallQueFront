@@ -21,14 +21,18 @@ public:
 	void AddWaitListData(SLZData& data);  // 加入等待队列
 	void AddDoingListData(SLZData& data);
 	void AddDoneListData(SLZData& data);
+	void AddCallingListData(SLZData& data);
+
 	BOOL HasDoneData();   //判断完成队列是否有数据
 	BOOL Start();
 
 
 	CList<SLZData,SLZData&> m_doingDataList;   //业务1排队队列
 	CList<SLZData,SLZData&> m_DoneList;   //完成队列
+	list<SLZData> m_callingList;//正在呼叫队列
 public:
 	CMutex m_mtDoingLock;
+	CMutex m_mtCallingLock;
 private:
 	CList<SLZData> m_WaitList;  //计时等待队列
 private:
@@ -58,10 +62,13 @@ public:
 
 	BOOL GetDoingFirstData(CallerCmd* callerCmd,SLZData& data);
 	int GetDoingDataCount();
-	BOOL ModifyDoingListData( SLZData& data );
-	BOOL IsEmptyDoingListDat();
-	void RemoveHeadDoingListData();
-	BOOL RemoveCallerDoingListData(CallerCmd* callerCmd,SLZData& data);
+//	BOOL ModifyDoingListData( SLZData& data );
+	BOOL IsEmptyCallingListData();
+//	BOOL IsEmptyDoingListDat();
+//	void RemoveHeadDoingListData();
+//	BOOL RemoveCallerDoingListData(CallerCmd* callerCmd,SLZData& data);
+	BOOL RemoveCallingListData(CallerCmd* callerCmd,SLZData& data);
+	BOOL ReStartQueue(CallerCmd* callerCmd,SLZData& data);//重排，将呼叫的第一个数据排队到队尾
 public:
 	CString m_doingSaveDataPath;
 	CString m_waitSaveDataPath;
