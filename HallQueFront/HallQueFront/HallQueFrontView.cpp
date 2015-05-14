@@ -89,6 +89,7 @@ m_workTimeOut(_T("工作时间到,停止取票"))
 , m_pWaringDlg(NULL)
 , m_pShowPageDlg(NULL)
 , m_pTrackCtrl(NULL)
+, m_nCurrentShowPage(0)
 {
 	// TODO: 在此处添加构造代码
 	m_isManage=FALSE;
@@ -1474,6 +1475,8 @@ void CHallQueFrontView::ShowPage(int nPageID)
 			CTrackContrl* pTrackContrl = *itera;
 			if(nPageID == pTrackContrl->GetSerialID())//找到界面
 			{
+				m_nCurrentShowPage = nPageID;//当前显示界面
+
 				if(m_pTrackCtrl!=NULL)
 					m_pTrackCtrl->SetAllCtrlHide();//隐藏原来界面
 				m_pTrackCtrl = pTrackContrl;//新界面赋值
@@ -1554,4 +1557,10 @@ void CHallQueFrontView::OnHidemain()
 	pFrame->ShowWindow(SW_HIDE);
 	pFrame->UpdateWindow();
 	pFrame->SetFullScreen(FALSE);
+}
+
+
+int CHallQueFrontView::GetCurrentShowPage()
+{
+	return m_nCurrentShowPage;
 }
