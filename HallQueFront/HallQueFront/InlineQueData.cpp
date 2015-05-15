@@ -51,8 +51,8 @@ BOOL CInlineQueData::GetInlineQueData(const UINT iWinId,
 			SLZData data;
 			POSITION posLast = pos;
 			data = m_lstInlineQue.GetNext(pos);
-			if(data.GetWindowId()==0)//如果没设置指定窗口
-			{
+//			if(data.GetWindowId()==0)//如果没设置指定窗口
+//			{
 				if(arrStrQueId[i].Compare(data.GetBussinessType()) == 0)
 				{
 					rdata = data;
@@ -60,17 +60,17 @@ BOOL CInlineQueData::GetInlineQueData(const UINT iWinId,
 					bFind = TRUE;
 					break;
 				}
-			}
-			else//设置了指定窗口优先呼叫
-			{
-				if(iWinId == data.GetWindowId())
-				{
-					rdata = data;
-					m_lstInlineQue.RemoveAt(posLast);
-					bFind = TRUE;
-					break;
-				}
-			}
+//			}
+// 			else//设置了指定窗口优先呼叫
+// 			{
+// 				if(iWinId == data.GetWindowId())
+// 				{
+// 					rdata = data;
+// 					m_lstInlineQue.RemoveAt(posLast);
+// 					bFind = TRUE;
+// 					break;
+// 				}
+// 			}
 		}
 		if(bFind)
 		{
