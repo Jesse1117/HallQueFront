@@ -83,9 +83,9 @@ UINT CDiscardQueData::DoDiscardData(LPVOID pParam)
 			pThis->GetDiscardQueData(data);
 			if(theApp.m_logicVariables.IsAutoSendToServer)//发送到服务端
 			{
-				CComplSocketClient clinet;
-				char buf[MAXRECVBUF]={0};
-				int actRecvSize = 0;
+// 				CComplSocketClient clinet;
+// 				char buf[MAXRECVBUF]={0};
+// 				int actRecvSize = 0;
 //				clinet.SendData(data.GetSerialId(),buf,actRecvSize);
 			}
 		}
