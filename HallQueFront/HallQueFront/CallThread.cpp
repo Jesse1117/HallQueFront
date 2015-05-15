@@ -529,6 +529,7 @@ void CCallThread::OnCallBusc(CallerCmd& callerCmd)
 void CCallThread::OnExChange(CallerCmd& callerCmd)
 {
 	SLZData data;
+	/*
 	if(m_logicVariables.ExchangeQue)
 	{
 		BOOL flag = FALSE;
@@ -587,7 +588,14 @@ void CCallThread::OnExChange(CallerCmd& callerCmd)
 		}
 		/////////////////////////////////////
 	}
+	*/
 	///////////////////////////////////
+
+	if(m_rCalledQueData.GetCalledQueData(callerCmd.GetWindowId(),data))
+	{
+		m_rCalledQueData.DeleteCalledQueData(data);
+		m_rInlineQueData.Add(data);
+	}
 }
 
 void CCallThread::ReturnToCaller(CallerCmd& callerCmd)
